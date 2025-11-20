@@ -32,13 +32,6 @@ No necesitas instalar nada (ni Node.js, ni bases de datos).
 Descarga el archivo index.html de este repositorio.
 Ábrelo directamente en tu navegador (Chrome, Safari, Edge, etc.).
 ¡Listo! La aplicación funcionará inmediatamente.
-🌐 Cómo Publicar en GitHub Pages
-Sigue estos pasos para tener tu app online gratis:
-Ve a la pestaña Settings (Configuración) de tu repositorio en GitHub.
-En el menú izquierdo, haz clic en Pages.
-En la sección "Build and deployment" > Branch, selecciona main y la carpeta / (root).
-Haz clic en Save.
-Espera unos minutos y tu sitio estará vivo en: https://tu-usuario.github.io/tu-repositorio/
 📂 Estructura del Proyecto
 index.html: Archivo maestro que contiene:
 Estructura HTML.
