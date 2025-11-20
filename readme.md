@@ -1,5 +1,5 @@
-# 🌮 Cocina Mexicana Pro - App de Inventario & Chef IA
-Cocina Mexicana Pro es una aplicación web moderna tipo "App Móvil" diseñada para gestionar tu despensa y descubrir recetas auténticas basadas en los ingredientes que tienes en casa.
+# 🌮 Cocina Pro - App de Inventario & Chef IA
+Cocina Pro es una aplicación web moderna tipo "App Móvil" diseñada para gestionar tu despensa y descubrir recetas auténticas basadas en los ingredientes que tienes en casa.
 Funciona como un Chef Inteligente: seleccionas lo que tienes en tu refrigerador y la app te sugiere qué cocinar, indicándote el porcentaje de coincidencia y qué ingredientes te faltan.
 ✨ Características Principales
 1. 🥕 Gestión de Inventario Visual
