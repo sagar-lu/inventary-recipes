@@ -1,141 +1,49 @@
-# Estructura del Proyecto - App de Recetas Mexicanas
-
-## Archivos Principales
-
-### 1. index.html - Página Principal
-- **Hero Section**: Imagen vibrante de comida mexicana con título animado
-- **Buscador Principal**: Barra de búsqueda con autocompletado
-- **Categorías Populares**: Grid de categorías con iconos
-- **Recetas Destacadas**: Carrusel de recetas populares
-- **Estadísticas**: Visualización de datos sobre recetas
-- **Testimonios**: Reviews de usuarios mexicanos
-
-### 2. recetas.html - Galería de Recetas
-- **Barra de Filtros**: Filtros por tiempo, ingredientes, tipo
-- **Grid de Recetas**: Tarjetas interactivas con hover effects
-- **Paginación**: Carga infinita o paginación tradicional
-- **Ordenamiento**: Por popularidad, tiempo, dificultad
-- **Vista de Lista/Grid**: Toggle entre vistas
-
-### 3. receta-detalle.html - Página Individual de Receta
-- **Imagen Hero**: Foto del platillo
-- **Información Rápida**: Tiempo, porciones, dificultad
-- **Ingredientes**: Lista interactiva con checkboxes
-- **Instrucciones**: Pasos numerados con timers
-- **Sustituciones**: Alternativas de ingredientes
-- **Nutrición**: Información nutricional
-- **Comentarios**: Reviews de otros usuarios
-
-### 4. favoritos.html - Recetas Guardadas
-- **Colecciones**: Grupos personalizados de recetas
-- **Lista de Compras**: Ingredientes de recetas seleccionadas
-- **Historial**: Recetas vistas recientemente
-- **Recomendaciones**: Basadas en favoritos
-
-## Archivos de Recursos
-
-### 5. main.js - JavaScript Principal
-- **Funcionalidad de Búsqueda**: Lógica de filtrado
-- **Sistema de Favoritos**: LocalStorage para guardar recetas
-- **Animaciones**: Control de efectos visuales
-- **Interacciones**: Hover, click, scroll events
-- **API de Recetas**: Simulación de datos de recetas
-
-### 6. recetas-data.js - Base de Datos de Recetas
-- **Recetas Completas**: 20+ recetas mexicanas auténticas
-- **Ingredientes**: Con cantidades y unidades
-- **Instrucciones**: Pasos detallados
-- **Imágenes**: URLs de imágenes de recetas
-- **Categorías**: Clasificación por tipo
-- **Tiempo de Prep**: Duración de preparación
-
-### 7. styles.css - Estilos Personalizados (si se necesita)
-- **Animaciones Custom**: Efectos específicos
-- **Media Queries**: Responsive design
-- **Componentes**: Estilos reutilizables
-
-## Estructura de Carpetas
-
-```
-/mnt/okcomputer/output/
-├── index.html
-├── recetas.html
-├── receta-detalle.html
-├── favoritos.html
-├── main.js
-├── recetas-data.js
-├── resources/
-│   ├── hero-mexican-food.jpg
-│   ├── ingredients/
-│   │   ├── chiles.jpg
-│   │   ├── tortillas.jpg
-│   │   ├── frijoles.jpg
-│   │   └── ...
-│   └── dishes/
-│       ├── enchiladas.jpg
-│       ├── tacos.jpg
-│       ├── pozole.jpg
-│       └── ...
-└── README.md
-```
-
-## Contenido de Recetas
-
-### Categorías Principales:
-1. **Desayunos**: Chilaquiles, Huevos rancheros, Molletes
-2. **Platos Fuertes**: Enchiladas, Tacos, Pozole, Mole
-3. **Sopas**: Sopa de tortilla, Sopa de fideo, Caldo de pollo
-4. **Antojitos**: Quesadillas, Gorditas, Sopes, Tostadas
-5. **Postres**: Flan, Arroz con leche, Buñuelos
-6. **Bebidas**: Agua fresca, Horchata, Jamaica
-
-### Características de Cada Receta:
-- Nombre auténtico y descripción
-- Tiempo de preparación (15-45 min)
-- Número de porciones (2-6 personas)
-- Dificultad (Fácil/Media/Difícil)
-- Costo estimado ($-$$$)
-- Ingredientes con cantidades
-- Instrucciones paso a paso
-- Variaciones regionales
-- Tips y secretos
-
-## Funcionalidades Técnicas
-
-### Interactividad:
-- Búsqueda en tiempo real
-- Filtros múltiples
-- Sistema de favoritos
-- Calculadora de porciones
-- Timer de cocina
-- Modo impresión
-
-### Efectos Visuales:
-- Animaciones de entrada
-- Hover effects en tarjetas
-- Scroll animations
-- Loading states
-- Transiciones suaves
-
-### Responsive Design:
-- Mobile-first approach
-- Breakpoints: 320px, 768px, 1024px, 1440px
-- Touch-friendly interface
-- Optimizado para tablets
-
-## Datos de la Aplicación
-
-### Estadísticas a Mostrar:
-- 25+ recetas disponibles
-- 5 categorías principales
-- 15+ ingredientes básicos
-- Promedio de 25 minutos por receta
-- Recetas de 10 estados de México
-- Valoraciones de usuarios
-
-### Contenido Multimedia:
-- 25+ imágenes de recetas
-- Iconos de ingredientes
-- Ilustraciones decorativas
-- Patrones mexicanos
-- Fotos de ingredientes
+# 🌮 Cocina Mexicana Pro - App de Inventario & Chef IA
+Cocina Mexicana Pro es una aplicación web moderna tipo "App Móvil" diseñada para gestionar tu despensa y descubrir recetas auténticas basadas en los ingredientes que tienes en casa.
+Funciona como un Chef Inteligente: seleccionas lo que tienes en tu refrigerador y la app te sugiere qué cocinar, indicándote el porcentaje de coincidencia y qué ingredientes te faltan.
+✨ Características Principales
+1. 🥕 Gestión de Inventario Visual
+Interfaz intuitiva: Iconos claros para agregar y quitar ingredientes.
+Categorías: Frutas, Verduras, Carnes, Alacena, Lácteos, etc.
+Persistencia: Tu inventario se guarda automáticamente en el navegador (LocalStorage).
+2. 👨‍🍳 Chef Inteligente (Generador de Recetas)
+Algoritmo de Coincidencia: Compara tu inventario con la base de datos de recetas.
+Barra de Progreso: Te muestra visualmente qué tanto de la receta puedes cocinar (ej. "Te faltan 2 ingredientes" o "¡Tienes todo!").
+Priorización: Ordena automáticamente las recetas por mayor coincidencia.
+3. 🛒 Lista de Compras
+Agrega ingredientes faltantes directamente desde la vista de la receta.
+Marca items como "comprados" para moverlos automáticamente a tu inventario.
+Comparte o gestiona tu lista fácilmente.
+4. ❤️ Favoritos
+Guarda tus recetas preferidas para acceso rápido.
+5. 📱 Diseño "Mobile-First"
+Barra de navegación inferior fija para fácil acceso en móviles.
+Transiciones suaves y alertas animadas.
+Diseño limpio y moderno usando Tailwind CSS.
+🛠️ Tecnologías Utilizadas
+El proyecto utiliza una arquitectura Single File Component (todo en un solo archivo HTML) para facilitar el despliegue y la edición.
+HTML5: Estructura semántica.
+Tailwind CSS (CDN): Diseño moderno y responsivo sin necesidad de compilación.
+Vanilla JavaScript: Lógica de la aplicación, algoritmo del chef y manejo del localStorage.
+SweetAlert2: Ventanas modales y notificaciones elegantes.
+Font Awesome: Iconografía.
+🚀 Instalación y Uso
+No necesitas instalar nada (ni Node.js, ni bases de datos).
+Descarga el archivo index.html de este repositorio.
+Ábrelo directamente en tu navegador (Chrome, Safari, Edge, etc.).
+¡Listo! La aplicación funcionará inmediatamente.
+🌐 Cómo Publicar en GitHub Pages
+Sigue estos pasos para tener tu app online gratis:
+Ve a la pestaña Settings (Configuración) de tu repositorio en GitHub.
+En el menú izquierdo, haz clic en Pages.
+En la sección "Build and deployment" > Branch, selecciona main y la carpeta / (root).
+Haz clic en Save.
+Espera unos minutos y tu sitio estará vivo en: https://tu-usuario.github.io/tu-repositorio/
+📂 Estructura del Proyecto
+index.html: Archivo maestro que contiene:
+Estructura HTML.
+Estilos CSS (Tailwind config).
+Base de datos JSON (Recetas e Ingredientes).
+Lógica JS.
+📄 Licencia
+Este proyecto es de código abierto. ¡Siéntete libre de usarlo y modificarlo para tu propia cocina!
