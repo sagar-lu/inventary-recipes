@@ -10,5 +10,3 @@ Diseño Premium: Interfaz estilo Apple (vidrio esmerilado, desenfoques y animaci
 Sobre la API Key de Gemini 🔑Esta aplicación funciona completamente en el navegador (Client-Side).
 
 Para proteger tu seguridad y permitir que cualquiera use la app sin costos para ti, utilizamos el modelo "Trae tu propia llave" (BYOK). Al intentar usar las funciones de IA (el chat o el botón "Crear Receta"), la app te pedirá una API Key.Puedes obtener una clave gratuita en Google AI Studio.La clave se guarda localmente en tu navegador (localStorage) para que no tengas que ponerla cada vez.
-
-Instalación 🛠️No requiere instalación. Simplemente abre el archivo index.html en tu navegador o visita la versión desplegada en GitHub Pages.Creado con ❤️ y sabor mexicano.
