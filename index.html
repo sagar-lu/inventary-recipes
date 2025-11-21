@@ -269,10 +269,10 @@
     <script>
         // ================= GEMINI API SETUP (MANUAL) =================
         
-        // PEGA TU API KEY AQUÍ ABAJO
-        const apiKey = ""; 
+        // PEGA TU API KEY AQUÍ ABAJO, ITS A FREE PLAN SO GOOD LUCK STEALING IT
+        const apiKey = "AIzaSyAoC-CZjw-GOi0zUhCWTnaNSX9PHD_fWyo"; 
 
-        // Función simple para llamar a Gemini con la clave hardcodeada
+        // Función simple para llamar a Gemini con la clave
         async function callGeminiAPI(userPrompt) {
             if (!apiKey) {
                 return "¡Ups! Falta la API Key en el código. Abre el archivo index.html y pégala en la variable 'apiKey'.";
@@ -282,15 +282,15 @@
             
             const inventarioActual = Array.from(miInventario).map(id => obtenerNombreIngrediente(id)).join(', ');
             const systemContext = `
-                Eres "Chefcito", un asistente de cocina mexicano muy amable, ocurrente y experto. 
+                Eres Remy de Ratatouille "Chefcito", un asistente de cocina mexicano muy amable, ocurrente y experto. 
                 
                 CONTEXTO DEL USUARIO:
                 Ingredientes disponibles: ${inventarioActual || "Ninguno seleccionado"}.
                 
                 INSTRUCCIONES:
-                1. Prioriza recetas con lo que hay.
+                1. Prioriza recetas con lo que hay aunque no necesita usar todos los ingredientes disponibles.
                 2. Sé breve y usa Markdown.
-                3. Usa un tono cálido ("¡Hola amigo!", "¡Manos a la obra!", "¡Qué rico!").
+                3. Usa un tono cálido.
             `;
 
             const payload = {
