@@ -31,7 +31,8 @@
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
             background-color: var(--app-bg);
             color: #1C1C1E;
-            padding-bottom: 110px;
+            /* Padding extra abajo para asegurar que nada se esconda tras la nav */
+            padding-bottom: 120px;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
             overscroll-behavior-y: none;
@@ -228,7 +229,7 @@
     </header>
 
     <!-- ================= MAIN CONTENT ================= -->
-    <main id="app-content" class="p-5 max-w-2xl mx-auto fade-in pb-32 min-h-screen">
+    <main id="app-content" class="p-5 max-w-2xl mx-auto fade-in min-h-screen">
         <!-- Contenido Dinámico -->
     </main>
 
@@ -266,47 +267,18 @@
 
     <!-- ================= SCRIPTS ================= -->
     <script>
-        // ================= GEMINI API SETUP (MODO SEGURO) =================
+        // ================= GEMINI API SETUP (MANUAL) =================
         
-        // 1. Esta variable se llena automáticamente en el entorno de prueba
+        // PEGA TU API KEY AQUÍ ABAJO
         const apiKey = ""; 
 
-        // 2. Función para gestionar credenciales de forma inteligente
-        async function getGeminiKey() {
-            // A. Si el entorno inyectó la clave (preview mode), usarla
-            if (apiKey && apiKey.length > 0) return apiKey;
-
-            // B. Si no (downloaded/hosted), buscar en LocalStorage
-            const storedKey = localStorage.getItem('gemini_api_key_user');
-            if (storedKey) return storedKey;
-
-            // C. Si no existe, pedirla al usuario (Solo una vez)
-            const { value: userKey } = await Swal.fire({
-                title: 'Configurar Chefcito AI',
-                text: 'Para usar la IA fuera del editor, ingresa tu API Key de Gemini:',
-                input: 'password',
-                inputPlaceholder: 'Pega tu API Key aquí...',
-                confirmButtonText: 'Guardar y Usar',
-                showCancelButton: true,
-                footer: '<a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-500">Obtener API Key gratis</a>',
-                customClass: { popup: 'rounded-2xl' }
-            });
-
-            if (userKey) {
-                localStorage.setItem('gemini_api_key_user', userKey);
-                return userKey;
-            }
-            return null;
-        }
-
+        // Función simple para llamar a Gemini con la clave hardcodeada
         async function callGeminiAPI(userPrompt) {
-            const activeKey = await getGeminiKey();
-
-            if (!activeKey) {
-                return "Necesito una API Key para cocinar nuevas ideas. Por favor recarga e ingrésala.";
+            if (!apiKey) {
+                return "¡Ups! Falta la API Key en el código. Abre el archivo index.html y pégala en la variable 'apiKey'.";
             }
 
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${activeKey}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
             
             const inventarioActual = Array.from(miInventario).map(id => obtenerNombreIngrediente(id)).join(', ');
             const systemContext = `
@@ -402,7 +374,7 @@
                 id: 1,
                 nombre: "Huevos Rancheros",
                 descripcion: "Huevos fritos sobre tortilla bañados en salsa roja.",
-                imagen: "https://imgs.search.brave.com/ydNqMp9kHiTl-WZEb5nMKpG_qQl9IbqnXwzZJAsrayE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/c2VyaW91c2VhdHMu/Y29tL3RobWIvaGpj/dU9OdmRrRGltRlpW/MVJReU5wSFFpMEZr/PS8xNTAweDAvZmls/dGVyczpub191cHNj/YWxlKCk6bWF4X2J5/dGVzKDE1MDAwMCk6/c3RyaXBfaWNjKCkv/X19vcHRfX2Fib3V0/Y29tX19jb2V1c19f/cmVzb3VyY2VzX19j/b250ZW50X21pZ3Jh/dGlvbl9fc2VyaW91/c19lYXRzX19zZXJp/b3VzZWF0cy5jb21f/X2ltYWdlc19fMjAx/NV9fMDRfXzIwMTUw/NDE1LWh1ZXZvcy1y/YW5jaGVyb3MtZWFz/eS1yZWNpcGUtMTMt/NWMwMDRkNjgwNmU5/NDNhMGE2NDNiYmM4/NmRmODc2YTAuanBn",
+                imagen: "https://images.unsplash.com/photo-1621516039535-649dfeb8c544?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
                 tiempo: 15,
                 dificultad: "Fácil",
                 categoria: "Desayuno",
@@ -414,7 +386,7 @@
                 id: 2,
                 nombre: "Molletes",
                 descripcion: "Bolillo tostado con frijoles y queso gratinado.",
-                imagen: "https://imgs.search.brave.com/ZQcsy2akTTAkLBpDtaQrxG96_pMtUhejuHJeMSBY8CE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTk3/NDQzMjU1Ny9waG90/by9ob21lbWFkZS1t/b2xsZXRlcy1yZWNp/cGUuanBnP3M9NjEy/eDYxMiZ3PTAmaz0y/MCZjPS16VWtPSjhS/U0J3RW9nV2t3QlBY/RlJBZTQ2YjdrcmlW/UDYxeWN5YmwwWWc9", 
+                imagen: "https://images.unsplash.com/photo-1628190760360-32b005e83924?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", 
                 tiempo: 15,
                 dificultad: "Muy Fácil",
                 categoria: "Desayuno",
@@ -426,7 +398,7 @@
                 id: 3,
                 nombre: "Enfrijoladas",
                 descripcion: "Tortillas sumergidas en salsa cremosa de frijol.",
-                imagen: "https://imgs.search.brave.com/NRuH-qBVdjt_sf-OvjeCBLUCl-lNBtaNSALLuCe0NCI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/cGF1bGluYWNvY2lu/YS5uZXQvd3AtY29u/dGVudC91cGxvYWRz/LzIwMjMvMTAvcmVj/ZXRhLWRlLWVuZnJp/am9sYWRhcy1wYXVs/aW5hLWNvY2luYS1y/ZWNldGFzLTgwMHg0/NTAuanBn",
+                imagen: "https://images.unsplash.com/photo-1652545208648-34016132d153?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
                 tiempo: 20,
                 dificultad: "Fácil",
                 categoria: "Comida",
@@ -438,7 +410,7 @@
                 id: 4,
                 nombre: "Guacamole",
                 descripcion: "El clásico dip de aguacate mexicano.",
-                imagen: "https://imgs.search.brave.com/ViJlWr8QE9HHNMwLTUrciDJjyhqEJ8waW-j_exAqdh8/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9yZWNl/dGFzZGVjb2NpbmEu/ZWxtdW5kby5lcy93/cC1jb250ZW50L3Vw/bG9hZHMvMjAxNi8w/Mi9ndWFjYW1vbGUt/c2luLWNpbGFudHJv/LmpwZw",
+                imagen: "https://images.unsplash.com/photo-1594911769850-8b634ac8f2b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
                 tiempo: 10,
                 dificultad: "Muy Fácil",
                 categoria: "Botana",
@@ -462,7 +434,7 @@
                 id: 6,
                 nombre: "Tostadas de Pollo",
                 descripcion: "Tostada crujiente con frijoles, pollo y crema.",
-                imagen: "https://imgs.search.brave.com/fXPYZ9apZj8vJmvvWQwh6HgXXGCwjWxFZSoTznJXrmo/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzAyLzA5Lzc1LzU1/LzM2MF9GXzIwOTc1/NTU1M19wblNZb2NW/c0F1bVNhV1c5TUZo/dzRUTWpleFR2a2Nq/UC5qcGc",
+                imagen: "https://images.unsplash.com/photo-1550951662-75d8d3886f44?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
                 tiempo: 25,
                 dificultad: "Fácil",
                 categoria: "Comida",
@@ -474,7 +446,7 @@
                 id: 7,
                 nombre: "Sopa de Tortilla",
                 descripcion: "Caldo de tomate con tiras fritas de tortilla.",
-                imagen: "https://imgs.search.brave.com/T7tAfmlElFKOr0iKRBzuFHebDzJJq7PYrgh2PME1U54/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMuZ2V0cmVjaXBl/a2l0LmNvbS8yMDIz/MTIyNzIyMjc0MS1j/b252ZXJ0b3V0LXJl/c2l6ZWQtdG9ydGls/bGFzb3VwMi5wbmc_/Y2xhc3M9MTZ4OQ",
+                imagen: "https://images.unsplash.com/photo-1577308856961-8e9ec50d0c67?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
                 tiempo: 35,
                 dificultad: "Media",
                 categoria: "Sopa",
@@ -841,22 +813,26 @@
         }
 
 
-        // 3. RECIPES VIEW
-        function renderRecipes(container) {
+        // 3. RECIPES VIEW (CORREGIDO PARA FAVORITOS)
+        // Ahora acepta un segundo argumento para filtrar la lista
+        function renderRecipes(container, inputLista = null) {
             const searchInput = document.getElementById('global-search');
             const busqueda = searchInput ? searchInput.value.toLowerCase().trim() : '';
             
-            let lista = recetasMexicanas;
+            // Usamos la lista proporcionada (ej: favoritos) o todas las recetas por defecto
+            let lista = inputLista || recetasMexicanas;
 
             if (busqueda) {
                 document.getElementById('clear-search').classList.remove('hidden');
-                lista = recetasMexicanas.filter(r => 
+                // Filtramos sobre la lista base (que pueden ser todas O solo favoritos)
+                lista = lista.filter(r => 
                     r.nombre.toLowerCase().includes(busqueda) || 
                     r.ingredientesBase.some(i => i.toLowerCase().includes(busqueda)) ||
                     r.categoria.toLowerCase().includes(busqueda)
                 );
             } else {
-                document.getElementById('clear-search').classList.add('hidden');
+                const clearBtn = document.getElementById('clear-search');
+                if(clearBtn) clearBtn.classList.add('hidden');
             }
 
             lista.sort((a, b) => {
@@ -865,6 +841,8 @@
                 return matchB - matchA;
             });
 
+            // Si es la vista de favoritos (inputLista no es null), mostramos todos, no paginamos igual
+            // O mantenemos paginación simple.
             const total = lista.length;
             const visibles = lista.slice(0, recetasMostradas);
             const hayMas = total > recetasMostradas;
@@ -872,12 +850,12 @@
             container.innerHTML = `
                 <div class="mb-6 flex justify-between items-end">
                     <h2 class="text-2xl font-bold text-gray-900 tracking-tight">
-                        ${busqueda ? 'Resultados' : 'Recetario'}
+                        ${busqueda ? 'Resultados' : (inputLista ? 'Mis Favoritos' : 'Recetario')}
                     </h2>
                     <span class="text-xs text-gray-400 font-medium">${total} recetas</span>
                 </div>
                 
-                ${!busqueda ? `
+                ${(!busqueda && !inputLista) ? `
                 <div class="flex gap-2 overflow-x-auto hide-scrollbar mb-6 pb-2">
                     <button class="px-5 py-2 bg-black text-white rounded-full text-xs font-bold shadow-md transform hover:scale-105 transition-transform">Todas</button>
                     <button class="px-5 py-2 glass-panel rounded-full text-xs font-bold whitespace-nowrap text-gray-600 hover:bg-white" onclick="filtrarCategoria('Desayuno')">Desayunos</button>
@@ -891,8 +869,7 @@
                 ${visibles.length === 0 ? `
                     <div class="text-center py-16 opacity-60">
                         <i class="fas fa-search text-4xl text-gray-300 mb-4"></i>
-                        <p class="text-gray-500 text-sm font-medium">No encontramos recetas con "${busqueda}".</p>
-                        <button onclick="limpiarBusqueda()" class="mt-4 text-blue-500 text-xs font-bold">Limpiar búsqueda</button>
+                        <p class="text-gray-500 text-sm font-medium">No encontramos recetas.</p>
                     </div>
                 ` : ''}
 
@@ -909,7 +886,15 @@
         function cargarMasRecetas() {
             recetasMostradas += 6;
             const appContent = document.getElementById('app-content');
-            renderRecipes(appContent);
+            // Check if we are in favorites view to re-pass the list? 
+            // Simple reload for now works for main view. 
+            // For proper pagination in favorites, state management would be better, but let's trigger re-render based on current view.
+            const activeNav = document.querySelector('.bottom-nav-item.active');
+            if (activeNav && activeNav.id === 'nav-favorites') {
+                 renderFavorites(appContent);
+            } else {
+                 renderRecipes(appContent);
+            }
         }
 
         function filtrarCategoria(cat) {
@@ -964,8 +949,10 @@
 
         // 4. AI CHEF VIEW (REAL GEMINI - RENAMED TO CHEFCITO)
         function renderAI(container) {
+            // CORRECCIÓN DE ALTURA: Calculamos 100vh menos el header (~80px) y el nav (~100px)
+            // y agregamos padding extra al contenedor de mensajes.
             container.innerHTML = `
-                <div class="h-[80vh] flex flex-col relative">
+                <div class="h-[calc(100vh-160px)] flex flex-col relative">
                     <div class="glass-panel rounded-3xl flex-1 flex flex-col overflow-hidden shadow-2xl border-white/60 bg-[#F5F5F7]">
                         <!-- Header Chat -->
                         <div class="bg-white/90 backdrop-blur-md p-4 border-b border-gray-200 flex items-center gap-3 z-10 shadow-sm">
@@ -1146,11 +1133,22 @@
             return ing ? ing.nombre : id;
         }
 
+        // CORREGIDO: RenderFavorites ahora llama a renderRecipes pasando la lista filtrada
         function renderFavorites(container) {
             const favs = recetasMexicanas.filter(r => misFavoritos.has(r.id));
             if(favs.length === 0) {
-                container.innerHTML = `<div class="text-center py-20 text-gray-400">Sin favoritos aún.</div>`;
+                container.innerHTML = `
+                    <div class="flex flex-col items-center justify-center h-[60vh] text-center text-gray-400">
+                        <div class="w-24 h-24 glass-panel rounded-full flex items-center justify-center mb-6 text-4xl shadow-lg">
+                            <i class="far fa-heart text-gray-300"></i>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-800">Sin Favoritos</h2>
+                        <p class="text-sm mt-2 max-w-[200px] leading-relaxed">Guarda tus recetas preferidas tocando el corazón en las tarjetas.</p>
+                        <button onclick="router('recipes')" class="mt-6 text-blue-500 font-bold text-sm">Ir al Recetario</button>
+                    </div>
+                `;
             } else {
+                // Pasamos la lista filtrada 'favs' como segundo argumento
                 renderRecipes(container, favs);
             }
         }
