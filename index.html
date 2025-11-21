@@ -2,417 +2,803 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cocina Mexicana & Inventario Inteligente</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cocina Mexicana & Chefcito</title>
     
-    <!-- Tailwind CSS para el diseño moderno y limpio -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Font Awesome para iconos -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Google Fonts: Poppins (Títulos) e Inter (Cuerpo) como en el diseño original -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-    
-    <!-- SweetAlert2 para alertas bonitas -->
+    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- Markdown Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
     <style>
-        /* Configuración base */
+        /* ================= APPLE SYSTEM ESTÉTICA & LIQUID GLASS ================= */
         :root {
-            --color-primary: #D2691E; /* Terra Cotta original */
-            --color-secondary: #4F7942; /* Verde Cilantro */
-            --color-bg: #F9FAFB;
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-surface: rgba(255, 255, 255, 0.75); 
+            --glass-highlight: rgba(255, 255, 255, 0.9);
+            --app-bg: #F2F2F7;
+            --active-blue: #007AFF;
         }
         
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--color-bg);
-            padding-bottom: 80px; /* Espacio para navbar móvil */
-        }
-        
-        h1, h2, h3, h4, h5 {
-            font-family: 'Poppins', sans-serif;
-        }
-
-        /* Ocultar scrollbar pero permitir scroll */
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+            background-color: var(--app-bg);
+            color: #1C1C1E;
+            padding-bottom: 110px;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            overscroll-behavior-y: none;
         }
 
-        /* Animaciones suaves */
-        .fade-in {
-            animation: fadeIn 0.3s ease-in-out;
+        /* Fondo Animado Sutil */
+        .ambient-light {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            background: #F2F2F7;
+            overflow: hidden;
         }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Estilo de la navegación inferior */
-        .bottom-nav-item.active {
-            color: var(--color-primary);
-        }
-        .bottom-nav-item.active i {
-            transform: translateY(-2px);
-        }
-
-        /* Checkbox personalizado para inventario */
-        .inventory-check:checked + div {
-            background-color: #ECFDF5;
-            border-color: var(--color-secondary);
-            color: var(--color-secondary);
-        }
-        
-        .inventory-check:checked + div .check-icon {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        /* Estilos específicos de la captura de pantalla */
-        .rounded-super {
-            border-radius: 24px;
-        }
-        
-        .category-circle {
-            width: 70px;
-            height: 70px;
+        .orb {
+            position: absolute;
             border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: floatOrb 15s infinite ease-in-out alternate;
+        }
+        .orb-1 { top: -10%; left: -10%; width: 60vw; height: 60vw; background: #FFD60A; }
+        .orb-2 { bottom: 0%; right: -20%; width: 70vw; height: 70vw; background: #FF9F0A; animation-delay: -5s; }
+        .orb-3 { top: 40%; left: 30%; width: 40vw; height: 40vw; background: #32D74B; opacity: 0.2; animation-delay: -8s; }
+
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 50px) scale(1.1); }
+        }
+
+        /* ================= PANELES DE CRISTAL ================= */
+        .glass-panel {
+            background: var(--glass-surface);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.05);
+            position: relative;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .glass-panel:active {
+            transform: scale(0.98);
+        }
+
+        /* Banner Principal */
+        .glass-banner {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.8);
+            box-shadow: 0 10px 40px -10px rgba(255, 159, 10, 0.15);
+        }
+
+        /* Iconos Apple Style */
+        .apple-icon {
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 0.5rem;
-            transition: transform 0.2s;
+            color: white;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.3);
         }
-        .category-circle:active {
-            transform: scale(0.95);
+        
+        .grad-red { background: linear-gradient(135deg, #FF3B30, #FF9500); }
+        .grad-green { background: linear-gradient(135deg, #34C759, #30B0C7); }
+        .grad-orange { background: linear-gradient(135deg, #FF9500, #FFCC00); }
+        .grad-blue { background: linear-gradient(135deg, #007AFF, #5AC8FA); }
+        .grad-purple { background: linear-gradient(135deg, #AF52DE, #5856D6); }
+        .grad-gray { background: linear-gradient(135deg, #8E8E93, #AEAEB2); }
+
+        /* Inputs y Elementos Interactivos */
+        .liquid-input {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0,0,0,0.05);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
         }
+        .liquid-input:focus {
+            background: #FFFFFF;
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2);
+            border-color: var(--active-blue);
+        }
+
+        /* Estado seleccionado del inventario */
+        .inventory-item-selected {
+            background-color: #FFFFFF !important;
+            border-color: var(--active-blue) !important;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2) !important;
+        }
+        .inventory-item-selected .icon-display {
+            filter: none !important;
+            transform: scale(1.1);
+        }
+        .inventory-item-selected .check-badge {
+            opacity: 1 !important;
+            transform: scale(1) !important;
+        }
+
+        /* Botón Líquido */
+        .btn-liquid {
+            background: #1C1C1E;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.1s;
+        }
+        .btn-liquid:active { transform: scale(0.95); }
+
+        /* Botón Mágico (IA) */
+        .btn-magic {
+            background: linear-gradient(135deg, #4285F4, #9B72CB, #D96570);
+            background-size: 200% 200%;
+            animation: gradientMove 3s ease infinite;
+            color: white;
+            box-shadow: 0 8px 20px -4px rgba(66, 133, 244, 0.4);
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Navegación */
+        .nav-glass {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(50px) saturate(200%);
+            border-top: 1px solid rgba(255,255,255,0.6);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.05);
+        }
+        .bottom-nav-item.active { color: var(--active-blue); }
+        .bottom-nav-item.active i { transform: translateY(-2px); }
+
+        /* Chat IA */
+        .chat-bubble-user {
+            background: var(--active-blue);
+            color: white;
+            border-radius: 18px 18px 2px 18px;
+        }
+        .chat-bubble-ai {
+            background: #FFFFFF;
+            color: #1C1C1E;
+            border-radius: 18px 18px 18px 2px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        /* Estilos Markdown dentro del chat */
+        .chat-bubble-ai strong { font-weight: 700; color: #000; }
+        .chat-bubble-ai ul { list-style-type: disc; margin-left: 20px; margin-top: 5px; margin-bottom: 5px; }
+        .chat-bubble-ai li { margin-bottom: 4px; }
+        .chat-bubble-ai p { margin-bottom: 8px; }
+        .chat-bubble-ai p:last-child { margin-bottom: 0; }
+
+        /* Clases Utilitarias */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .rounded-super { border-radius: 24px; }
+        
+        .fade-in { animation: fadeIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="text-gray-800">
+<body>
 
-    <!-- ================= HEADER (Móvil Style) ================= -->
-    <header class="bg-white sticky top-0 z-50 px-4 py-3 shadow-sm">
-        <div class="flex items-center justify-between mb-2">
-            <div>
-                <p class="text-xs text-gray-500 font-medium">Buenos días,</p>
-                <h1 class="text-xl font-bold text-gray-900">Mi Cocina Mexicana</h1>
+    <!-- Fondo Ambiental -->
+    <div class="ambient-light">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- ================= HEADER ================= -->
+    <header class="sticky top-0 z-50 px-5 py-3 bg-white/0 pointer-events-none">
+        <div class="glass-panel rounded-super px-5 py-4 flex flex-col gap-3 shadow-lg pointer-events-auto">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-[11px] uppercase tracking-widest text-gray-500 font-semibold">Bienvenido</p>
+                    <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Mi Cocina</h1>
+                </div>
+                <!-- Botón Perfil -->
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-gray-100 to-gray-200 border border-white flex items-center justify-center shadow-sm">
+                    <i class="fas fa-user text-gray-500 text-sm"></i>
+                </div>
             </div>
-            <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
-                <i class="fas fa-user"></i>
+            
+            <!-- Buscador Global -->
+            <div class="relative">
+                <input type="text" id="global-search" placeholder="Buscar recetas (ej. pozole, esquites)..." 
+                       class="liquid-input w-full rounded-xl py-3 pl-10 pr-4 text-[15px] placeholder-gray-400 text-gray-800 focus:outline-none">
+                <i class="fas fa-search absolute left-3.5 top-3.5 text-gray-400 text-sm"></i>
+                <!-- Botón limpiar búsqueda -->
+                <button id="clear-search" onclick="limpiarBusqueda()" class="hidden absolute right-3 top-3 text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times-circle"></i>
+                </button>
             </div>
-        </div>
-        
-        <!-- Barra de búsqueda global -->
-        <div class="relative">
-            <input type="text" id="global-search" placeholder="Buscar recetas o ingredientes..." 
-                   class="w-full bg-gray-100 text-gray-700 rounded-xl py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-orange-300 transition-all">
-            <i class="fas fa-search absolute left-4 top-3.5 text-gray-400"></i>
         </div>
     </header>
 
-    <!-- ================= MAIN CONTENT AREA ================= -->
-    <main id="app-content" class="p-4 max-w-3xl mx-auto fade-in">
-        <!-- El contenido cambiará dinámicamente con JS -->
+    <!-- ================= MAIN CONTENT ================= -->
+    <main id="app-content" class="p-5 max-w-2xl mx-auto fade-in pb-32 min-h-screen">
+        <!-- Contenido Dinámico -->
     </main>
 
-    <!-- ================= BOTTOM NAVIGATION ================= -->
-    <nav class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 px-6 py-3 flex justify-between items-center z-50 md:justify-center md:gap-12">
-        <button onclick="router('home')" class="bottom-nav-item active flex flex-col items-center text-gray-400 hover:text-orange-600 transition-colors" id="nav-home">
-            <i class="fas fa-home text-xl mb-1"></i>
+    <!-- ================= NAVIGATION ================= -->
+    <nav class="fixed bottom-6 left-4 right-4 nav-glass rounded-[30px] px-2 py-2 flex justify-between items-center z-50 md:w-full md:max-w-md md:mx-auto shadow-2xl border border-white/40">
+        <button onclick="router('home')" class="bottom-nav-item active flex flex-col items-center justify-center w-16 h-12 text-gray-400 transition-all" id="nav-home">
+            <i class="fas fa-home text-xl mb-0.5"></i>
             <span class="text-[10px] font-medium">Inicio</span>
         </button>
         
-        <button onclick="router('inventory')" class="bottom-nav-item flex flex-col items-center text-gray-400 hover:text-orange-600 transition-colors" id="nav-inventory">
-            <i class="fas fa-carrot text-xl mb-1"></i>
-            <span class="text-[10px] font-medium">Inventario</span>
+        <button onclick="router('inventory')" class="bottom-nav-item flex flex-col items-center justify-center w-16 h-12 text-gray-400 transition-all" id="nav-inventory">
+            <i class="fas fa-box-open text-xl mb-0.5"></i>
+            <span class="text-[10px] font-medium">Despensa</span>
         </button>
         
-        <!-- Botón Central de Acción -->
-        <button onclick="generarRecetas()" class="bg-orange-600 text-white w-12 h-12 rounded-full flex items-center justify-center -mt-6 shadow-lg hover:bg-orange-700 transition-transform hover:scale-105 active:scale-95">
-            <i class="fas fa-utensils"></i>
+        <!-- Botón Central IA (Chefcito) -->
+        <button onclick="router('ai-chef')" class="flex flex-col items-center justify-center -mt-10 group">
+            <div class="w-14 h-14 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white shadow-xl shadow-blue-500/30 border-4 border-[#F2F2F7] transform group-active:scale-95 transition-transform duration-200 overflow-hidden relative">
+                <i class="fas fa-wand-magic-sparkles text-xl relative z-10"></i>
+                <div class="absolute top-0 left-0 w-full h-full bg-white/20 blur-sm"></div>
+            </div>
+            <span class="text-[10px] font-bold text-gray-600 mt-1">Chefcito</span>
         </button>
         
-        <button onclick="router('recipes')" class="bottom-nav-item flex flex-col items-center text-gray-400 hover:text-orange-600 transition-colors" id="nav-recipes">
-            <i class="fas fa-book-open text-xl mb-1"></i>
+        <button onclick="router('recipes')" class="bottom-nav-item flex flex-col items-center justify-center w-16 h-12 text-gray-400 transition-all" id="nav-recipes">
+            <i class="fas fa-book-open text-xl mb-0.5"></i>
             <span class="text-[10px] font-medium">Recetas</span>
         </button>
         
-        <button onclick="router('favorites')" class="bottom-nav-item flex flex-col items-center text-gray-400 hover:text-orange-600 transition-colors" id="nav-favorites">
-            <i class="fas fa-heart text-xl mb-1"></i>
-            <span class="text-[10px] font-medium">Favoritos</span>
+        <button onclick="router('favorites')" class="bottom-nav-item flex flex-col items-center justify-center w-16 h-12 text-gray-400 transition-all" id="nav-favorites">
+            <i class="fas fa-heart text-xl mb-0.5"></i>
+            <span class="text-[10px] font-medium">Favs</span>
         </button>
     </nav>
 
     <!-- ================= SCRIPTS ================= -->
     <script>
-        // ================= DATOS (Originales + Estructura Inventario) =================
+        // ================= GEMINI API SETUP (MODO SEGURO) =================
         
-        // Categorías para el Inventario (Basado en la imagen)
+        // 1. Esta variable se llena automáticamente en el entorno de prueba
+        const apiKey = ""; 
+
+        // 2. Función para gestionar credenciales de forma inteligente
+        async function getGeminiKey() {
+            // A. Si el entorno inyectó la clave (preview mode), usarla
+            if (apiKey && apiKey.length > 0) return apiKey;
+
+            // B. Si no (downloaded/hosted), buscar en LocalStorage
+            const storedKey = localStorage.getItem('gemini_api_key_user');
+            if (storedKey) return storedKey;
+
+            // C. Si no existe, pedirla al usuario (Solo una vez)
+            const { value: userKey } = await Swal.fire({
+                title: 'Configurar Chefcito AI',
+                text: 'Para usar la IA fuera del editor, ingresa tu API Key de Gemini:',
+                input: 'password',
+                inputPlaceholder: 'Pega tu API Key aquí...',
+                confirmButtonText: 'Guardar y Usar',
+                showCancelButton: true,
+                footer: '<a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-500">Obtener API Key gratis</a>',
+                customClass: { popup: 'rounded-2xl' }
+            });
+
+            if (userKey) {
+                localStorage.setItem('gemini_api_key_user', userKey);
+                return userKey;
+            }
+            return null;
+        }
+
+        async function callGeminiAPI(userPrompt) {
+            const activeKey = await getGeminiKey();
+
+            if (!activeKey) {
+                return "Necesito una API Key para cocinar nuevas ideas. Por favor recarga e ingrésala.";
+            }
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${activeKey}`;
+            
+            const inventarioActual = Array.from(miInventario).map(id => obtenerNombreIngrediente(id)).join(', ');
+            const systemContext = `
+                Eres "Chefcito", un asistente de cocina mexicano muy amable, ocurrente y experto. 
+                
+                CONTEXTO DEL USUARIO:
+                Ingredientes disponibles: ${inventarioActual || "Ninguno seleccionado"}.
+                
+                INSTRUCCIONES:
+                1. Prioriza recetas con lo que hay.
+                2. Sé breve y usa Markdown.
+                3. Usa un tono cálido ("¡Hola amigo!", "¡Manos a la obra!", "¡Qué rico!").
+            `;
+
+            const payload = {
+                contents: [{ 
+                    parts: [{ text: userPrompt }] 
+                }],
+                systemInstruction: {
+                    parts: [{ text: systemContext }]
+                }
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (error) {
+                console.error("Gemini Error:", error);
+                return "¡Ay caramba! Chefcito tuvo un problema de conexión. Verifica tu API Key o tu internet.";
+            }
+        }
+
+        // ================= DATOS (Extendidos) =================
+        
         const categoriasInventario = [
-            { id: 'frutas', nombre: 'Fruta', icono: 'apple-alt', color: 'bg-red-100 text-red-500', img: 'https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&w=100&q=80' },
-            { id: 'verduras', nombre: 'Verdura', icono: 'carrot', color: 'bg-green-100 text-green-500', img: 'https://images.unsplash.com/photo-1597362925123-77861d3fbac7?auto=format&fit=crop&w=100&q=80' },
-            { id: 'proteinas', nombre: 'Proteína', icono: 'drumstick-bite', color: 'bg-orange-100 text-orange-500', img: 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=100&q=80' },
-            { id: 'despensa', nombre: 'Despensa', icono: 'box-open', color: 'bg-yellow-100 text-yellow-600', img: 'https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=100&q=80' },
-            { id: 'lacteos', nombre: 'Lácteos', icono: 'cheese', color: 'bg-blue-100 text-blue-500', img: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=100&q=80' }
+            { id: 'frutas', nombre: 'Frutas', icon: 'fa-apple-alt', gradient: 'grad-red' },
+            { id: 'verduras', nombre: 'Verduras', icon: 'fa-carrot', gradient: 'grad-green' },
+            { id: 'proteinas', nombre: 'Proteína', icon: 'fa-drumstick-bite', gradient: 'grad-orange' },
+            { id: 'lacteos', nombre: 'Lácteos', icon: 'fa-cheese', gradient: 'grad-blue' },
+            { id: 'despensa', nombre: 'Despensa', icon: 'fa-bread-slice', gradient: 'grad-purple' },
+            { id: 'otros', nombre: 'Otros', icon: 'fa-utensils', gradient: 'grad-gray' }
         ];
 
-        // Ingredientes comunes para selección rápida
+        // Añadimos ingredientes necesarios para las nuevas recetas
         const ingredientesComunesDB = [
             { id: 'pollo', nombre: 'Pollo', cat: 'proteinas' },
             { id: 'res', nombre: 'Carne de Res', cat: 'proteinas' },
             { id: 'cerdo', nombre: 'Carne de Cerdo', cat: 'proteinas' },
-            { id: 'huevo', nombre: 'Huevos', cat: 'proteinas' },
+            { id: 'huevo', nombre: 'Huevo', cat: 'proteinas' },
+            { id: 'jamon', nombre: 'Jamón', cat: 'proteinas' },
+            { id: 'salchicha', nombre: 'Salchicha', cat: 'proteinas' },
+            { id: 'camaron', nombre: 'Camarón', cat: 'proteinas' },
             { id: 'tomate', nombre: 'Tomate', cat: 'verduras' },
+            { id: 'tomate_verde', nombre: 'Tomate Verde', cat: 'verduras' },
             { id: 'cebolla', nombre: 'Cebolla', cat: 'verduras' },
             { id: 'ajo', nombre: 'Ajo', cat: 'verduras' },
             { id: 'chile', nombre: 'Chiles', cat: 'verduras' },
+            { id: 'chile_poblano', nombre: 'Chile Poblano', cat: 'verduras' },
+            { id: 'elote', nombre: 'Elote (Maíz)', cat: 'verduras' },
             { id: 'cilantro', nombre: 'Cilantro', cat: 'verduras' },
+            { id: 'lechuga', nombre: 'Lechuga', cat: 'verduras' },
+            { id: 'rabano', nombre: 'Rábano', cat: 'verduras' },
             { id: 'aguacate', nombre: 'Aguacate', cat: 'frutas' },
             { id: 'limon', nombre: 'Limón', cat: 'frutas' },
+            { id: 'piña', nombre: 'Piña', cat: 'frutas' },
+            { id: 'granada', nombre: 'Granada', cat: 'frutas' },
             { id: 'tortillas', nombre: 'Tortillas', cat: 'despensa' },
+            { id: 'maiz_pozolero', nombre: 'Maíz Pozolero', cat: 'despensa' },
             { id: 'frijoles', nombre: 'Frijoles', cat: 'despensa' },
             { id: 'arroz', nombre: 'Arroz', cat: 'despensa' },
+            { id: 'pan', nombre: 'Pan (Bolillo)', cat: 'despensa' },
+            { id: 'tostadas', nombre: 'Tostadas', cat: 'despensa' },
+            { id: 'fideos', nombre: 'Fideos', cat: 'despensa' },
+            { id: 'masa', nombre: 'Masa de Maíz', cat: 'despensa' },
+            { id: 'aceite', nombre: 'Aceite', cat: 'despensa' },
+            { id: 'pasta', nombre: 'Pasta', cat: 'despensa' },
+            { id: 'achiote', nombre: 'Achiote', cat: 'despensa' },
             { id: 'queso', nombre: 'Queso', cat: 'lacteos' },
-            { id: 'crema', nombre: 'Crema', cat: 'lacteos' }
+            { id: 'crema', nombre: 'Crema', cat: 'lacteos' },
+            { id: 'leche', nombre: 'Leche', cat: 'lacteos' }
         ];
 
-        // Datos de Recetas (Del archivo original, simplificado para JS)
+        // Recetas Base (Ampliadas a 22 recetas)
         const recetasMexicanas = [
             {
                 id: 1,
-                nombre: "Tacos de Carnitas",
-                descripcion: "Tacos tradicionales con carne de cerdo deshebrada.",
-                imagen: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=800&q=80",
-                tiempo: 25,
+                nombre: "Huevos Rancheros",
+                descripcion: "Huevos fritos sobre tortilla bañados en salsa roja.",
+                imagen: "https://images.unsplash.com/photo-1621516039535-649dfeb8c544?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                tiempo: 15,
                 dificultad: "Fácil",
-                categoria: "Plato Principal",
-                ingredientesBase: ["tortillas", "cerdo", "cebolla", "cilantro", "limon"],
-                instrucciones: ["Calienta las tortillas.", "Deshebra la carne.", "Pica verdura.", "Arma el taco."]
+                categoria: "Desayuno",
+                ingredientesBase: ["huevo", "tortillas", "tomate", "cebolla", "chile", "aceite"],
+                instrucciones: ["Prepara una salsa roja básica.", "Pasa tortillas por aceite.", "Fríe huevos estrellados.", "Monta: Tortilla, huevo, salsa."],
+                tips: ["El epazote en la salsa le da un toque auténtico."]
             },
             {
                 id: 2,
-                nombre: "Enchiladas Rojas",
-                descripcion: "Tortillas bañadas en salsa de chile guajillo y queso.",
-                imagen: "https://images.unsplash.com/photo-1564758564527-b97d79cb27c1?auto=format&fit=crop&w=800&q=80",
-                tiempo: 30,
-                dificultad: "Media",
-                categoria: "Plato Principal",
-                ingredientesBase: ["tortillas", "pollo", "chile", "tomate", "queso", "crema", "cebolla"],
-                instrucciones: ["Prepara la salsa.", "Rellena tortillas con pollo.", "Baña en salsa.", "Decora."]
+                nombre: "Molletes",
+                descripcion: "Bolillo tostado con frijoles y queso gratinado.",
+                imagen: "https://images.unsplash.com/photo-1628190760360-32b005e83924?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", 
+                tiempo: 15,
+                dificultad: "Muy Fácil",
+                categoria: "Desayuno",
+                ingredientesBase: ["pan", "frijoles", "queso"],
+                instrucciones: ["Corta el bolillo.", "Unta frijoles.", "Cubre con queso y gratina.", "Sirve con Pico de Gallo."],
+                tips: ["Agrega chorizo o jamón debajo del queso."]
             },
             {
                 id: 3,
-                nombre: "Chilaquiles Verdes",
-                descripcion: "Totopos bañados en salsa verde con pollo.",
-                imagen: "https://st4.depositphotos.com/12847240/31601/i/1600/depositphotos_316014680-stock-photo-chilaquiles-mexican-food.jpg",
+                nombre: "Enfrijoladas",
+                descripcion: "Tortillas sumergidas en salsa cremosa de frijol.",
+                imagen: "https://images.unsplash.com/photo-1652545208648-34016132d153?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
                 tiempo: 20,
                 dificultad: "Fácil",
-                categoria: "Desayuno",
-                ingredientesBase: ["tortillas", "tomate", "chile", "cilantro", "cebolla", "pollo", "queso", "crema"],
-                instrucciones: ["Fríe tortillas.", "Haz salsa verde.", "Mezcla.", "Sirve con queso."]
+                categoria: "Comida",
+                ingredientesBase: ["tortillas", "frijoles", "queso", "crema", "cebolla"],
+                instrucciones: ["Licúa frijoles con caldo.", "Hierve la salsa.", "Suaviza tortillas en aceite.", "Pasa por salsa, dobla y sirve."],
+                tips: ["Añade chipotle a la salsa."]
             },
             {
                 id: 4,
-                nombre: "Sopa de Tortilla",
-                descripcion: "Caldo de tomate con tiras de tortilla frita.",
-                imagen: "https://images.unsplash.com/photo-1713374989663-e5b165462fef?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                tiempo: 25,
-                dificultad: "Fácil",
-                categoria: "Sopa",
-                ingredientesBase: ["tortillas", "tomate", "cebolla", "ajo", "aguacate", "queso", "crema"],
-                instrucciones: ["Haz caldillo de tomate.", "Fríe tiras.", "Sirve caldo sobre tiras.", "Decora."]
+                nombre: "Guacamole",
+                descripcion: "El clásico dip de aguacate mexicano.",
+                imagen: "https://images.unsplash.com/photo-1594911769850-8b634ac8f2b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                tiempo: 10,
+                dificultad: "Muy Fácil",
+                categoria: "Botana",
+                ingredientesBase: ["aguacate", "tomate", "cebolla", "cilantro", "limon", "chile"],
+                instrucciones: ["Pica verdura fina.", "Machaca aguacate.", "Mezcla con limón y sal."],
+                tips: ["Deja el hueso para evitar oxidación."]
             },
             {
                 id: 5,
-                nombre: "Arroz a la Mexicana",
-                descripcion: "Arroz rojo clásico esponjoso.",
-                imagen: "https://media-cdn.tripadvisor.com/media/photo-s/03/a6/70/c0/rosa-mexicano.jpg",
-                tiempo: 25,
-                dificultad: "Fácil",
-                categoria: "Guarnición",
-                ingredientesBase: ["arroz", "tomate", "cebolla", "ajo", "zanahoria"],
-                instrucciones: ["Dora el arroz.", "Licúa tomate y ajo.", "Agrega caldo.", "Cocina tapado."]
+                nombre: "Sincronizadas",
+                descripcion: "Tortilla rellena de jamón y queso fundido.",
+                imagen: "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                tiempo: 10,
+                dificultad: "Muy Fácil",
+                categoria: "Cena",
+                ingredientesBase: ["tortillas", "jamon", "queso"],
+                instrucciones: ["Tortilla + Jamón + Queso + Tortilla.", "Calienta hasta derretir.", "Corta en 4."],
+                tips: ["Acompaña con guacamole."]
             },
             {
                 id: 6,
+                nombre: "Tostadas de Pollo",
+                descripcion: "Tostada crujiente con frijoles, pollo y crema.",
+                imagen: "https://images.unsplash.com/photo-1550951662-75d8d3886f44?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                tiempo: 25,
+                dificultad: "Fácil",
+                categoria: "Comida",
+                ingredientesBase: ["tortillas", "pollo", "frijoles", "lechuga", "crema", "queso"],
+                instrucciones: ["Tostada frita.", "Unta frijoles.", "Pon pollo, lechuga, crema y queso."],
+                tips: ["Escurre bien la lechuga."]
+            },
+            {
+                id: 7,
+                nombre: "Sopa de Tortilla",
+                descripcion: "Caldo de tomate con tiras fritas de tortilla.",
+                imagen: "https://images.unsplash.com/photo-1577308856961-8e9ec50d0c67?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                tiempo: 35,
+                dificultad: "Media",
+                categoria: "Sopa",
+                ingredientesBase: ["tortillas", "tomate", "cebolla", "ajo", "aguacate", "queso", "crema", "aceite"],
+                instrucciones: ["Fríe tiras de tortilla.", "Haz caldillo de tomate.", "Sirve caldo sobre tiras."],
+                tips: ["Sirve las tiras aparte."]
+            },
+            {
+                id: 8,
+                nombre: "Chilaquiles Verdes",
+                descripcion: "Totopos bañados en salsa verde picante.",
+                imagen: "https://images.unsplash.com/photo-1640719028782-4f36a537f02b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                tiempo: 30,
+                dificultad: "Media",
+                categoria: "Desayuno",
+                ingredientesBase: ["tortillas", "tomate_verde", "cebolla", "chile", "cilantro", "pollo", "crema", "queso"],
+                instrucciones: ["Totopos fritos + Salsa verde hirviendo.", "Sirve con crema, queso y cebolla."],
+                tips: ["Baña al momento para crujientes."]
+            },
+            {
+                id: 9,
                 nombre: "Pico de Gallo",
-                descripcion: "Salsa fresca picada para acompañar.",
-                imagen: "https://tastesbetterfromscratch.com/wp-content/uploads/2024/04/Pico-de-Gallo24-2.jpg",
+                descripcion: "Salsa bandera fresca.",
+                imagen: "https://images.unsplash.com/photo-1575852583802-f875323a67d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
                 tiempo: 10,
                 dificultad: "Muy Fácil",
                 categoria: "Salsa",
                 ingredientesBase: ["tomate", "cebolla", "cilantro", "chile", "limon"],
-                instrucciones: ["Pica todo finamente.", "Mezcla.", "Sazona con limón y sal."]
+                instrucciones: ["Pica todo en cubos.", "Mezcla con limón y sal."],
+                tips: ["Quita semillas del tomate."]
             },
-             {
-                id: 7,
-                nombre: "Quesadillas Sencillas",
-                descripcion: "Tortilla doblada con queso derretido.",
-                imagen: "https://images.unsplash.com/photo-1618040996337-56904b7850b9?auto=format&fit=crop&w=800&q=80",
-                tiempo: 10,
+            {
+                id: 10,
+                nombre: "Flautas de Pollo",
+                descripcion: "Tacos dorados enrollados.",
+                imagen: "https://images.unsplash.com/photo-1624376386002-3c2d447a1768?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                tiempo: 40,
+                dificultad: "Media",
+                categoria: "Comida",
+                ingredientesBase: ["tortillas", "pollo", "aceite", "lechuga", "crema", "queso"],
+                instrucciones: ["Tortilla caliente + Pollo.", "Enrolla y fríe en aceite abundante.", "Sirve con crema y queso."],
+                tips: ["Aceite muy caliente."]
+            },
+            // --- 10 NUEVAS RECETAS AGREGADAS ---
+            {
+                id: 11,
+                nombre: "Pozole Rojo",
+                descripcion: "Caldo tradicional con carne de cerdo y maíz.",
+                imagen: "https://images.unsplash.com/photo-1606787947360-4181ea538757?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                tiempo: 120,
+                dificultad: "Difícil",
+                categoria: "Comida",
+                ingredientesBase: ["maiz_pozolero", "cerdo", "chile", "lechuga", "rabano", "limon", "cebolla"],
+                instrucciones: ["Cuece el maíz hasta que reviente.", "Cuece la carne.", "Licúa chiles secos y agrégalos al caldo.", "Hierve todo junto.", "Sirve con lechuga, rábano y orégano."],
+                tips: ["Usa cabeza de lomo para más sabor."]
+            },
+            {
+                id: 12,
+                nombre: "Cochinita Pibil",
+                descripcion: "Cerdo marinado en achiote estilo Yucatán.",
+                imagen: "https://images.unsplash.com/photo-1610452399626-d6263520551c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                tiempo: 180,
+                dificultad: "Difícil",
+                categoria: "Comida",
+                ingredientesBase: ["cerdo", "achiote", "limon", "cebolla", "tortillas"],
+                instrucciones: ["Marina el cerdo en achiote y jugo cítrico.", "Cocina a fuego muy lento (horno u olla) hasta deshacerse.", "Sirve en tacos con cebolla morada encurtida."],
+                tips: ["Mejor si marinas toda la noche."]
+            },
+            {
+                id: 13,
+                nombre: "Esquites",
+                descripcion: "Granos de elote cocidos con epazote.",
+                imagen: "https://images.unsplash.com/photo-1625938145744-e38051524e2c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                tiempo: 45,
+                dificultad: "Fácil",
+                categoria: "Botana",
+                ingredientesBase: ["elote", "cebolla", "chile", "limon", "mayonesa", "queso"],
+                instrucciones: ["Sofríe cebolla y chile.", "Agrega granos de elote y agua/caldo.", "Hierve con epazote hasta suavizar.", "Sirve en vaso con mayonesa, queso y chile."],
+                tips: ["Usa elote fresco, no de lata."]
+            },
+            {
+                id: 14,
+                nombre: "Sopa de Fideo",
+                descripcion: "La sopa casera por excelencia.",
+                imagen: "https://images.unsplash.com/photo-1569058242253-92a9c755a293?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                tiempo: 25,
                 dificultad: "Muy Fácil",
-                categoria: "Antojito",
-                ingredientesBase: ["tortillas", "queso"],
-                instrucciones: ["Calienta tortilla.", "Pon queso.", "Dobla hasta derretir."]
+                categoria: "Sopa",
+                ingredientesBase: ["fideos", "tomate", "cebolla", "ajo", "aceite"],
+                instrucciones: ["Fríe el fideo hasta dorar.", "Licúa tomate, cebolla y ajo.", "Vierte la salsa sobre el fideo.", "Agrega agua y cocina hasta suavizar."],
+                tips: ["No dejes quemar el fideo, solo dorado."]
+            },
+            {
+                id: 15,
+                nombre: "Tacos Dorados de Papa",
+                descripcion: "Tacos crujientes rellenos de puré de papa.",
+                imagen: "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                tiempo: 40,
+                dificultad: "Media",
+                categoria: "Comida",
+                ingredientesBase: ["tortillas", "papa", "aceite", "lechuga", "queso", "crema"],
+                instrucciones: ["Haz un puré de papa sazonado.", "Rellena tortillas y cierra.", "Fríe en aceite hasta dorar.", "Sirve con repollo/lechuga y salsa."],
+                tips: ["El puré debe estar frío para que no salte el aceite."]
+            },
+            {
+                id: 16,
+                nombre: "Agua de Horchata",
+                descripcion: "Bebida refrescante de arroz y canela.",
+                imagen: "https://images.unsplash.com/photo-1629202686047-9753e192ddb1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                tiempo: 60,
+                dificultad: "Fácil",
+                categoria: "Bebida",
+                ingredientesBase: ["arroz", "leche", "azucar", "canela"],
+                instrucciones: ["Remoja arroz y canela.", "Licúa todo muy bien.", "Cuela y mezcla con leche y azúcar.", "Sirve con mucho hielo."],
+                tips: ["Agrega leche condensada para más cremosidad."]
+            },
+            {
+                id: 17,
+                nombre: "Chiles en Nogada",
+                descripcion: "Platillo barroco de temporada.",
+                imagen: "https://images.unsplash.com/photo-1598511726623-d090c0558b20?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                tiempo: 150,
+                dificultad: "Experto",
+                categoria: "Comida",
+                ingredientesBase: ["chile_poblano", "cerdo", "res", "frutas", "crema", "nuez", "granada"],
+                instrucciones: ["Asa y pela los chiles.", "Prepara picadillo con carne y frutas.", "Rellena chiles.", "Baña con salsa de nogada (nuez y crema).", "Decora con granada."],
+                tips: ["La nuez de castilla es esencial."]
+            },
+            {
+                id: 18,
+                nombre: "Tamales Verdes",
+                descripcion: "Masa de maíz rellena de pollo en salsa verde.",
+                imagen: "https://images.unsplash.com/photo-1607335272365-5c164a667104?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                tiempo: 120,
+                dificultad: "Difícil",
+                categoria: "Desayuno",
+                ingredientesBase: ["masa", "pollo", "tomate_verde", "chile", "aceite"],
+                instrucciones: ["Bate la masa con manteca/aceite.", "Prepara salsa verde con pollo.", "Arma tamales en hojas de maíz.", "Cuece al vapor 1 hora."],
+                tips: ["La masa flota en agua cuando está lista para usar."]
+            },
+            {
+                id: 19,
+                nombre: "Arroz con Leche",
+                descripcion: "Postre cremoso tradicional.",
+                imagen: "https://images.unsplash.com/photo-1551806236-40742f3ce480?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                tiempo: 40,
+                dificultad: "Fácil",
+                categoria: "Postre",
+                ingredientesBase: ["arroz", "leche", "azucar", "canela"],
+                instrucciones: ["Cuece arroz con agua y canela.", "Agrega leches y cocina a fuego lento.", "Mueve constante para espesar."],
+                tips: ["Usa leche evaporada."]
+            },
+            {
+                id: 20,
+                nombre: "Tacos al Pastor Caseros",
+                descripcion: "Cerdo marinado con piña.",
+                imagen: "https://images.unsplash.com/photo-1606788075765-975b774619d8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                tiempo: 60,
+                dificultad: "Media",
+                categoria: "Cena",
+                ingredientesBase: ["cerdo", "piña", "cebolla", "cilantro", "chile", "tortillas"],
+                instrucciones: ["Marina carne con chiles y achiote.", "Fríe en sartén bien caliente.", "Sirve con piña, cilantro y cebolla."],
+                tips: ["Corta la carne muy delgada."]
             }
         ];
 
-        // Estado de la aplicación
-        let miInventario = new Set(); // Usamos Set para evitar duplicados
+        // Estado Global
+        let miInventario = new Set();
         let misFavoritos = new Set();
-
-        // ================= LOGICA DE NAVEGACION =================
+        let recetasMostradas = 6; 
         
+        // ================= ROUTER =================
         function router(view) {
-            // Actualizar estilo botones nav
-            document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active', 'text-orange-600'));
-            document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.add('text-gray-400'));
+            const searchInput = document.getElementById('global-search');
             
+            document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active', 'text-[#007AFF]'));
             const activeBtn = document.getElementById(`nav-${view}`);
-            if(activeBtn) {
-                activeBtn.classList.add('active', 'text-orange-600');
-                activeBtn.classList.remove('text-gray-400');
-            }
+            if(activeBtn) activeBtn.classList.add('active', 'text-[#007AFF]');
 
             const appContent = document.getElementById('app-content');
-            appContent.innerHTML = ''; // Limpiar vista
+            appContent.innerHTML = ''; 
+            window.scrollTo({ top: 0, behavior: 'auto' });
 
             switch(view) {
-                case 'home': renderHome(appContent); break;
-                case 'inventory': renderInventory(appContent); break;
-                case 'recipes': renderRecipes(appContent); break;
-                case 'favorites': renderFavorites(appContent); break;
+                case 'home': 
+                    searchInput.value = ''; 
+                    document.getElementById('clear-search').classList.add('hidden');
+                    renderHome(appContent); 
+                    break;
+                case 'inventory': 
+                    searchInput.value = ''; 
+                    document.getElementById('clear-search').classList.add('hidden');
+                    renderInventory(appContent); 
+                    break;
+                case 'recipes': 
+                    renderRecipes(appContent); 
+                    break;
+                case 'favorites': 
+                    searchInput.value = '';
+                    document.getElementById('clear-search').classList.add('hidden');
+                    renderFavorites(appContent); 
+                    break;
+                case 'ai-chef': 
+                    renderAI(appContent); 
+                    break;
                 default: renderHome(appContent);
             }
             
-            // Scroll to top suave
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            appContent.classList.remove('fade-in');
+            void appContent.offsetWidth; 
+            appContent.classList.add('fade-in');
         }
 
-        // ================= VISTAS (VIEWS) =================
+        // ================= VISTAS =================
 
         // 1. HOME VIEW
         function renderHome(container) {
             container.innerHTML = `
-                <!-- Banner Inventario (Estilo Captura) -->
-                <div class="bg-gray-100 rounded-super p-6 mb-8 relative overflow-hidden cursor-pointer shadow-sm group" onclick="router('inventory')">
-                    <div class="relative z-10 w-2/3">
-                        <h2 class="text-2xl font-bold text-gray-800 leading-tight mb-2">Inventario de<br>Ingredientes</h2>
-                        <p class="text-gray-500 text-sm mb-4">Gestiona lo que tienes en casa</p>
-                        
-                        <!-- Indicadores pequeños -->
-                        <div class="flex gap-2">
-                            <div class="h-1 w-4 bg-orange-500 rounded-full"></div>
-                            <div class="h-1 w-1 bg-gray-300 rounded-full"></div>
-                            <div class="h-1 w-1 bg-gray-300 rounded-full"></div>
-                            <div class="h-1 w-1 bg-gray-300 rounded-full"></div>
-                        </div>
+                <!-- Banner Inventario -->
+                <div class="glass-banner rounded-super p-0 mb-8 relative h-52 flex items-center overflow-hidden cursor-pointer group active:scale-[0.98] transition-all" onclick="router('inventory')">
+                    <div class="absolute inset-0">
+                        <img src="https://images.unsplash.com/photo-1606787366850-de6330128bfc?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                             class="w-full h-full object-cover opacity-90 transition-transform duration-1000 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-r from-white via-white/50 to-transparent"></div>
                     </div>
-                    <div class="absolute right-0 top-0 h-full w-1/2">
-                        <img src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=400&q=80" 
-                             class="w-full h-full object-cover object-center mask-gradient group-hover:scale-105 transition-transform duration-500" alt="Frutas">
+                    
+                    <div class="relative z-10 pl-6 pr-4 w-2/3">
+                        <div class="w-12 h-12 mb-3 bg-white rounded-2xl flex items-center justify-center shadow-lg text-orange-500 text-2xl">
+                            <i class="fas fa-carrot"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold text-gray-900 leading-none mb-2 tracking-tight">Inventario<br>Inteligente</h2>
+                        <p class="text-gray-600 text-sm font-medium">Gestiona tu comida</p>
                     </div>
                 </div>
 
-                <!-- Accesos Directos (Estilo Captura "Agregar Productos") -->
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-bold text-lg">Explorar Categorías</h3>
-                    <i class="fas fa-chevron-right text-gray-400 text-sm"></i>
+                <!-- Categorías -->
+                <div class="flex justify-between items-center mb-4 px-1">
+                    <h3 class="font-bold text-xl text-gray-900 tracking-tight">Categorías</h3>
+                    <button onclick="router('inventory')" class="text-blue-500 text-xs font-semibold hover:underline">Ver todo</button>
                 </div>
                 
-                <div class="flex justify-between gap-2 overflow-x-auto hide-scrollbar pb-4 mb-4">
-                    ${categoriasInventario.map(cat => `
-                        <div class="flex flex-col items-center min-w-[70px]" onclick="router('inventory')">
-                            <div class="category-circle bg-white shadow-sm border border-gray-100 overflow-hidden">
-                                <img src="${cat.img}" class="w-full h-full object-cover opacity-90" alt="${cat.nombre}">
+                <div class="grid grid-cols-4 gap-4 mb-8">
+                    ${categoriasInventario.slice(0,4).map(cat => `
+                        <div class="flex flex-col items-center gap-2 cursor-pointer group" onclick="router('inventory')">
+                            <div class="w-[64px] h-[64px] rounded-[20px] apple-icon ${cat.gradient} group-active:scale-90 transition-transform duration-200">
+                                <i class="fas ${cat.icon} text-2xl"></i>
                             </div>
-                            <span class="text-xs font-medium text-gray-600">${cat.nombre}</span>
+                            <span class="text-[11px] font-medium text-gray-500 text-center">${cat.nombre}</span>
                         </div>
                     `).join('')}
                 </div>
 
-                <!-- Reportes Rápidos / Recetas Destacadas -->
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-bold text-lg">Recetas Populares</h3>
-                    <i class="fas fa-chevron-right text-gray-400 text-sm"></i>
+                <!-- Recetas Destacadas -->
+                <div class="flex justify-between items-center mb-4 px-1 mt-6">
+                    <h3 class="font-bold text-xl text-gray-900 tracking-tight">Inspiración</h3>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    ${recetasMexicanas.slice(0, 4).map(receta => `
-                        <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-50 cursor-pointer hover:shadow-md transition-all" onclick="mostrarDetalleReceta(${receta.id})">
-                            <div class="h-32 rounded-xl bg-gray-200 mb-3 overflow-hidden relative">
-                                <img src="${receta.imagen}" class="w-full h-full object-cover" alt="${receta.nombre}">
-                                <div class="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-[10px] font-bold text-orange-600">
-                                    ${receta.tiempo} min
-                                </div>
-                            </div>
-                            <h4 class="font-bold text-sm text-gray-800 leading-tight mb-1">${receta.nombre}</h4>
-                            <p class="text-xs text-gray-400">${receta.categoria}</p>
-                        </div>
-                    `).join('')}
+                <div class="grid grid-cols-1 gap-5">
+                    ${recetasMexicanas.slice(0, 3).map(receta => renderRecipeCard(receta)).join('')}
+                </div>
+                
+                <div class="mt-8 text-center pb-8">
+                    <button onclick="router('recipes')" class="text-blue-500 font-bold text-sm bg-blue-50 px-6 py-3 rounded-full hover:bg-blue-100 transition-colors">
+                        Explorar todas las recetas
+                    </button>
                 </div>
             `;
         }
 
-        // 2. INVENTORY VIEW
+        // 2. INVENTORY VIEW (CON BOTÓN MÁGICO GEMINI)
         function renderInventory(container) {
             const totalItems = miInventario.size;
             
             container.innerHTML = `
-                <div class="flex justify-between items-end mb-6">
+                <div class="glass-panel sticky top-0 z-20 rounded-2xl p-4 mb-6 flex justify-between items-center backdrop-blur-xl bg-white/90 shadow-sm border border-white/50">
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-900">Mi Inventario</h2>
-                        <p class="text-sm text-gray-500">Selecciona lo que tienes en casa</p>
+                        <h2 class="text-2xl font-bold text-gray-900 tracking-tight">Mi Despensa</h2>
+                        <p class="text-xs text-gray-500 font-medium">Toca para seleccionar</p>
                     </div>
-                    <div class="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-bold">
-                        ${totalItems} items
+                    <div class="flex gap-2 items-center">
+                        <button onclick="generarRecetaMagica()" class="btn-magic px-3 py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center gap-1 active:scale-90 transition-transform">
+                            <!-- ICONO CORREGIDO PARA QUE APAREZCA EN VERSIÓN FREE -->
+                            <i class="fas fa-wand-magic-sparkles"></i> ✨ Crear Receta
+                        </button>
+                        <div class="bg-black text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg" id="inventory-counter">
+                            ${totalItems}
+                        </div>
                     </div>
                 </div>
 
-                <!-- Barra de búsqueda de ingredientes -->
-                <div class="mb-6">
-                    <input type="text" placeholder="Agregar ingrediente rápido..." 
-                           class="w-full bg-white border border-gray-200 rounded-xl py-3 px-4 text-sm focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none">
-                </div>
-
-                <!-- Grid de Categorías e Ingredientes -->
-                <div class="space-y-6 pb-20">
+                <div class="space-y-8 pb-20">
                     ${categoriasInventario.map(cat => {
-                        // Filtrar ingredientes de esta categoría
                         const ings = ingredientesComunesDB.filter(i => i.cat === cat.id);
+                        if (ings.length === 0) return '';
+                        
                         return `
                         <div>
-                            <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full ${cat.color.split(' ')[0].replace('text', 'bg')}"></span>
-                                ${cat.nombre}
-                            </h3>
+                            <div class="flex items-center gap-2 mb-3 pl-1">
+                                <div class="w-6 h-6 rounded-md apple-icon ${cat.gradient} text-[10px] shadow-none">
+                                    <i class="fas ${cat.icon}"></i>
+                                </div>
+                                <h3 class="font-bold text-gray-800 text-sm tracking-wide">${cat.nombre}</h3>
+                            </div>
+                            
                             <div class="grid grid-cols-3 gap-3">
                                 ${ings.map(ing => {
                                     const isSelected = miInventario.has(ing.id);
                                     return `
-                                    <label class="cursor-pointer group relative">
-                                        <input type="checkbox" class="inventory-check sr-only" 
-                                               onchange="toggleInventario('${ing.id}')" ${isSelected ? 'checked' : ''}>
-                                        <div class="bg-white border border-gray-100 rounded-xl p-3 flex flex-col items-center justify-center h-28 shadow-sm transition-all hover:shadow-md">
-                                            <!-- Icono Check -->
-                                            <div class="check-icon absolute top-2 right-2 bg-green-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs opacity-0 transform scale-0 transition-all duration-200">
-                                                <i class="fas fa-check"></i>
-                                            </div>
-                                            
-                                            <!-- Imagen/Icono del ingrediente (Placeholder visual) -->
-                                            <div class="w-10 h-10 mb-2 rounded-full bg-gray-50 flex items-center justify-center text-lg">
-                                                ${getIconForIngredient(ing.id)}
-                                            </div>
-                                            
-                                            <span class="text-xs text-center font-medium text-gray-600 leading-tight">${ing.nombre}</span>
+                                    <div id="ing-card-${ing.id}" 
+                                         class="glass-panel h-28 rounded-2xl flex flex-col items-center justify-center p-2 cursor-pointer transition-all duration-200 select-none relative ${isSelected ? 'inventory-item-selected' : 'bg-white/60'}"
+                                         onclick="toggleInventario('${ing.id}')">
+                                        
+                                        <div class="text-3xl mb-2 icon-display transition-transform duration-200 ${isSelected ? '' : 'grayscale opacity-60'}">
+                                            ${getIconForIngredient(ing.id)}
                                         </div>
-                                    </label>
+                                        
+                                        <span class="text-[11px] font-bold text-center leading-tight ${isSelected ? 'text-gray-900' : 'text-gray-400'} name-display">
+                                            ${ing.nombre}
+                                        </span>
+
+                                        <div class="check-badge absolute top-2 right-2 text-blue-500 text-sm transition-all duration-200 ${isSelected ? 'opacity-100 scale-100' : 'opacity-0 scale-0'}">
+                                            <i class="fas fa-check-circle"></i>
+                                        </div>
+                                    </div>
                                     `;
                                 }).join('')}
                             </div>
@@ -420,297 +806,296 @@
                         `;
                     }).join('')}
                 </div>
-                
-                <!-- Botón Flotante Generar -->
-                <div class="fixed bottom-24 right-4 left-4 z-40">
-                    <button onclick="generarRecetas()" class="w-full bg-gray-900 text-white py-4 rounded-2xl shadow-xl font-bold text-lg flex items-center justify-center gap-2 transform active:scale-95 transition-all">
-                        <i class="fas fa-magic text-orange-400"></i>
-                        Generar Recetas (${totalItems})
-                    </button>
-                </div>
             `;
         }
 
-        // 3. RECIPES VIEW (Resultados)
-        function renderRecipes(container, filtradas = null) {
-            let listaRecetas = filtradas || recetasMexicanas;
-            
-            // Si es resultado de generación, mostrar header especial
-            const esGenerado = filtradas !== null;
-            
-            let html = '';
-            
-            if (esGenerado) {
-                html += `
-                    <div class="mb-6">
-                        <button onclick="router('inventory')" class="text-sm text-gray-500 mb-2 flex items-center gap-1">
-                            <i class="fas fa-arrow-left"></i> Volver al inventario
-                        </button>
-                        <h2 class="text-2xl font-bold text-gray-900">¡Puedes cocinar esto!</h2>
-                        <p class="text-sm text-gray-500">Basado en tus ${miInventario.size} ingredientes</p>
-                    </div>
-                `;
-            } else {
-                html += `
-                    <div class="mb-6">
-                        <h2 class="text-2xl font-bold text-gray-900">Todas las Recetas</h2>
-                        <div class="flex gap-2 mt-4 overflow-x-auto hide-scrollbar">
-                            <button class="px-4 py-2 bg-orange-600 text-white rounded-full text-sm font-medium whitespace-nowrap">Todas</button>
-                            <button class="px-4 py-2 bg-white border border-gray-200 text-gray-600 rounded-full text-sm font-medium whitespace-nowrap">Desayunos</button>
-                            <button class="px-4 py-2 bg-white border border-gray-200 text-gray-600 rounded-full text-sm font-medium whitespace-nowrap">Platos Fuertes</button>
-                            <button class="px-4 py-2 bg-white border border-gray-200 text-gray-600 rounded-full text-sm font-medium whitespace-nowrap">Cenas</button>
-                        </div>
-                    </div>
-                `;
-            }
-
-            if (listaRecetas.length === 0) {
-                html += `
-                    <div class="text-center py-12">
-                        <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-carrot text-3xl text-gray-300"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-gray-700">Sin coincidencias</h3>
-                        <p class="text-gray-500 text-sm mt-2">Intenta agregar más ingredientes a tu inventario.</p>
-                        <button onclick="router('inventory')" class="mt-6 px-6 py-2 bg-orange-600 text-white rounded-full text-sm font-bold">Ir al Inventario</button>
-                    </div>
-                `;
-            } else {
-                html += `<div class="space-y-4">`;
-                listaRecetas.forEach(receta => {
-                    // Calcular coincidencia
-                    const coincidencia = calcularCoincidencia(receta);
-                    const porcentaje = Math.round((coincidencia.encontrados / coincidencia.total) * 100);
-                    
-                    // Color de la barra de progreso
-                    let progressColor = 'bg-red-500';
-                    if(porcentaje > 40) progressColor = 'bg-yellow-500';
-                    if(porcentaje > 75) progressColor = 'bg-green-500';
-
-                    html += `
-                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex gap-4 cursor-pointer" onclick="mostrarDetalleReceta(${receta.id})">
-                            <div class="w-24 h-24 rounded-xl bg-gray-100 overflow-hidden flex-shrink-0">
-                                <img src="${receta.imagen}" class="w-full h-full object-cover" alt="${receta.nombre}">
-                            </div>
-                            <div class="flex-1 flex flex-col justify-between">
-                                <div>
-                                    <div class="flex justify-between items-start">
-                                        <h4 class="font-bold text-gray-800 leading-tight pr-2">${receta.nombre}</h4>
-                                        <i class="far fa-heart text-gray-400 hover:text-red-500 transition-colors" onclick="event.stopPropagation(); toggleFavorito(${receta.id}, this)"></i>
-                                    </div>
-                                    <p class="text-xs text-gray-500 mt-1 line-clamp-1">${receta.descripcion}</p>
-                                </div>
-                                
-                                <div>
-                                    ${esGenerado ? `
-                                        <div class="flex items-center justify-between text-xs mb-1">
-                                            <span class="font-medium ${porcentaje === 100 ? 'text-green-600' : 'text-gray-500'}">
-                                                ${porcentaje === 100 ? '¡Tienes todo!' : `Te faltan ${coincidencia.faltantes.length}`}
-                                            </span>
-                                            <span class="font-bold text-gray-700">${porcentaje}%</span>
-                                        </div>
-                                        <div class="w-full bg-gray-100 rounded-full h-1.5">
-                                            <div class="${progressColor} h-1.5 rounded-full" style="width: ${porcentaje}%"></div>
-                                        </div>
-                                    ` : `
-                                        <div class="flex items-center gap-3 text-xs text-gray-500">
-                                            <span class="flex items-center gap-1"><i class="far fa-clock"></i> ${receta.tiempo} min</span>
-                                            <span class="flex items-center gap-1"><i class="fas fa-signal"></i> ${receta.dificultad}</span>
-                                        </div>
-                                    `}
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-                html += `</div>`;
-            }
-            
-            container.innerHTML = html;
-        }
-
-        // 4. FAVORITES VIEW
-        function renderFavorites(container) {
-            const favs = recetasMexicanas.filter(r => misFavoritos.has(r.id));
-            
-            let html = `
-                <div class="mb-6">
-                    <h2 class="text-2xl font-bold text-gray-900">Mis Favoritos</h2>
-                    <p class="text-sm text-gray-500">${favs.length} recetas guardadas</p>
-                </div>
-            `;
-
-            if (favs.length === 0) {
-                html += `
-                    <div class="text-center py-12 bg-white rounded-3xl border border-dashed border-gray-200">
-                        <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="far fa-heart text-2xl text-red-300"></i>
-                        </div>
-                        <p class="text-gray-500">Aún no tienes favoritos.</p>
-                    </div>
-                `;
-            } else {
-                html += `<div class="grid grid-cols-1 gap-4">`;
-                favs.forEach(receta => {
-                    html += `
-                        <div class="relative h-48 rounded-2xl overflow-hidden shadow-md cursor-pointer group" onclick="mostrarDetalleReceta(${receta.id})">
-                            <img src="${receta.imagen}" class="absolute w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="${receta.nombre}">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4 flex flex-col justify-end">
-                                <h3 class="text-white font-bold text-lg">${receta.nombre}</h3>
-                                <div class="flex items-center gap-3 text-gray-300 text-xs mt-1">
-                                    <span><i class="far fa-clock"></i> ${receta.tiempo} min</span>
-                                    <span>${receta.dificultad}</span>
-                                </div>
-                            </div>
-                            <button onclick="event.stopPropagation(); toggleFavorito(${receta.id}, null); router('favorites')" class="absolute top-3 right-3 w-8 h-8 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-red-500 transition-colors">
-                                <i class="fas fa-times text-xs"></i>
-                            </button>
-                        </div>
-                    `;
-                });
-                html += `</div>`;
-            }
-            container.innerHTML = html;
-        }
-
-        // ================= MODAL DETALLE RECETA =================
-        function mostrarDetalleReceta(id) {
-            const receta = recetasMexicanas.find(r => r.id === id);
-            const coincidencia = calcularCoincidencia(receta);
-            const tieneTodo = coincidencia.faltantes.length === 0;
-
-            Swal.fire({
-                html: `
-                    <div class="text-left -mx-5 -mt-5">
-                        <div class="h-56 relative">
-                            <img src="${receta.imagen}" class="w-full h-full object-cover rounded-t-lg">
-                            <button onclick="Swal.close()" class="absolute top-4 left-4 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center text-gray-800 shadow-lg z-10">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                        </div>
-                        <div class="p-5">
-                            <div class="flex justify-between items-start mb-2">
-                                <div>
-                                    <span class="text-xs font-bold text-orange-600 uppercase tracking-wider">${receta.categoria}</span>
-                                    <h2 class="text-2xl font-bold text-gray-900 leading-tight mt-1">${receta.nombre}</h2>
-                                </div>
-                                <div class="bg-gray-100 px-3 py-1 rounded-lg text-sm font-bold text-gray-700 flex flex-col items-center">
-                                    <i class="fas fa-clock text-orange-500 mb-1"></i>
-                                    ${receta.tiempo}'
-                                </div>
-                            </div>
-                            
-                            <p class="text-gray-500 text-sm mb-6">${receta.descripcion}</p>
-
-                            <!-- Estado de ingredientes -->
-                            <div class="mb-6 p-4 rounded-xl ${tieneTodo ? 'bg-green-50 border border-green-100' : 'bg-orange-50 border border-orange-100'}">
-                                <h4 class="font-bold text-sm mb-2 ${tieneTodo ? 'text-green-800' : 'text-orange-800'}">
-                                    ${tieneTodo ? '<i class="fas fa-check-circle mr-1"></i> ¡Tienes todo listo!' : `<i class="fas fa-shopping-basket mr-1"></i> Te faltan ${coincidencia.faltantes.length} ingredientes`}
-                                </h4>
-                                ${!tieneTodo ? `
-                                    <div class="flex flex-wrap gap-2">
-                                        ${coincidencia.faltantes.map(i => `<span class="px-2 py-1 bg-white rounded text-xs font-medium text-gray-600 border border-gray-200">${obtenerNombreIngrediente(i)}</span>`).join('')}
-                                    </div>
-                                ` : ''}
-                            </div>
-
-                            <h3 class="font-bold text-lg mb-3">Ingredientes</h3>
-                            <ul class="space-y-2 mb-6">
-                                ${receta.ingredientesBase.map(ing => {
-                                    const tengo = miInventario.has(ing);
-                                    return `
-                                    <li class="flex items-center justify-between text-sm pb-2 border-b border-gray-50 last:border-0">
-                                        <span class="flex items-center gap-2 ${tengo ? 'text-gray-800' : 'text-gray-400'}">
-                                            <i class="fas fa-circle text-[6px] ${tengo ? 'text-green-500' : 'text-gray-300'}"></i>
-                                            ${obtenerNombreIngrediente(ing)}
-                                        </span>
-                                        ${tengo ? '<i class="fas fa-check text-green-500 text-xs"></i>' : '<span class="text-[10px] text-red-400 font-medium">Falta</span>'}
-                                    </li>`;
-                                }).join('')}
-                            </ul>
-
-                            <h3 class="font-bold text-lg mb-3">Preparación</h3>
-                            <div class="space-y-4">
-                                ${receta.instrucciones.map((paso, index) => `
-                                    <div class="flex gap-3">
-                                        <div class="flex-shrink-0 w-6 h-6 rounded-full bg-orange-100 text-orange-600 font-bold text-xs flex items-center justify-center mt-0.5">
-                                            ${index + 1}
-                                        </div>
-                                        <p class="text-sm text-gray-600 leading-relaxed">${paso}</p>
-                                    </div>
-                                `).join('')}
-                            </div>
-
-                            <button class="w-full mt-8 bg-gray-900 text-white font-bold py-3 rounded-xl shadow-lg" onclick="Swal.close()">
-                                Cerrar Receta
-                            </button>
-                        </div>
-                    </div>
-                `,
-                showConfirmButton: false,
-                customClass: {
-                    popup: 'rounded-2xl overflow-hidden p-0',
-                    container: 'p-0'
-                },
-                width: '100%',
-                padding: 0,
-                background: '#fff'
-            });
-        }
-
-        // ================= FUNCIONES LÓGICAS =================
-        
-        function toggleInventario(ingId) {
-            if(miInventario.has(ingId)) {
-                miInventario.delete(ingId);
-            } else {
-                miInventario.add(ingId);
-            }
-            // Animación visual pequeña
-            if(window.navigator && window.navigator.vibrate) {
-                window.navigator.vibrate(50); // Feedback háptico móvil
-            }
-        }
-
-        function generarRecetas() {
-            if (miInventario.size === 0) {
-                Swal.fire({
-                    icon: 'info',
-                    title: 'Despensa Vacía',
-                    text: 'Agrega algunos ingredientes en la sección de Inventario primero.',
-                    confirmButtonColor: '#EA580C',
-                    confirmButtonText: 'Ir al Inventario'
-                }).then((result) => {
-                    if (result.isConfirmed) router('inventory');
-                });
+        // --- FUNCIÓN GEMINI: GENERAR RECETA MÁGICA ---
+        async function generarRecetaMagica() {
+            if(miInventario.size === 0) {
+                Swal.fire({ icon: 'warning', title: 'Despensa Vacía', text: 'Selecciona ingredientes primero para que Chefcito pueda crear algo.' });
                 return;
             }
 
-            // Animación de carga simulada
+            // Mostrar Loading SweetAlert
+            Swal.fire({
+                title: 'Chefcito está pensando...',
+                text: 'Analizando tus ingredientes para crear algo único.',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            const prompt = `Crea una receta creativa y deliciosa usando PRINCIPALMENTE estos ingredientes: ${Array.from(miInventario).map(id => obtenerNombreIngrediente(id)).join(', ')}. Puedes asumir que tengo sal, pimienta, agua y aceite. 
+            Dame el Nombre de la Receta, una breve descripción, y los pasos sencillos. Usa formato Markdown.`;
+
+            const recetaMD = await callGeminiAPI(prompt);
+            
+            Swal.close();
+
+            // Mostrar resultado en modal
+            Swal.fire({
+                title: '✨ Receta de Chefcito',
+                html: `<div class="text-left text-sm p-2 bg-gray-50 rounded-lg max-h-[60vh] overflow-y-auto">${marked.parse(recetaMD)}</div>`,
+                confirmButtonText: '¡Gracias Chefcito!',
+                customClass: { popup: 'rounded-2xl' }
+            });
+        }
+
+
+        // 3. RECIPES VIEW
+        function renderRecipes(container) {
+            const searchInput = document.getElementById('global-search');
+            const busqueda = searchInput ? searchInput.value.toLowerCase().trim() : '';
+            
+            let lista = recetasMexicanas;
+
+            if (busqueda) {
+                document.getElementById('clear-search').classList.remove('hidden');
+                lista = recetasMexicanas.filter(r => 
+                    r.nombre.toLowerCase().includes(busqueda) || 
+                    r.ingredientesBase.some(i => i.toLowerCase().includes(busqueda)) ||
+                    r.categoria.toLowerCase().includes(busqueda)
+                );
+            } else {
+                document.getElementById('clear-search').classList.add('hidden');
+            }
+
+            lista.sort((a, b) => {
+                const matchA = calcularCoincidencia(a).porcentaje;
+                const matchB = calcularCoincidencia(b).porcentaje;
+                return matchB - matchA;
+            });
+
+            const total = lista.length;
+            const visibles = lista.slice(0, recetasMostradas);
+            const hayMas = total > recetasMostradas;
+
+            container.innerHTML = `
+                <div class="mb-6 flex justify-between items-end">
+                    <h2 class="text-2xl font-bold text-gray-900 tracking-tight">
+                        ${busqueda ? 'Resultados' : 'Recetario'}
+                    </h2>
+                    <span class="text-xs text-gray-400 font-medium">${total} recetas</span>
+                </div>
+                
+                ${!busqueda ? `
+                <div class="flex gap-2 overflow-x-auto hide-scrollbar mb-6 pb-2">
+                    <button class="px-5 py-2 bg-black text-white rounded-full text-xs font-bold shadow-md transform hover:scale-105 transition-transform">Todas</button>
+                    <button class="px-5 py-2 glass-panel rounded-full text-xs font-bold whitespace-nowrap text-gray-600 hover:bg-white" onclick="filtrarCategoria('Desayuno')">Desayunos</button>
+                    <button class="px-5 py-2 glass-panel rounded-full text-xs font-bold whitespace-nowrap text-gray-600 hover:bg-white" onclick="filtrarCategoria('Comida')">Comidas</button>
+                </div>` : ''}
+
+                <div class="grid grid-cols-1 gap-5" id="recipe-grid">
+                    ${visibles.map(receta => renderRecipeCard(receta)).join('')}
+                </div>
+
+                ${visibles.length === 0 ? `
+                    <div class="text-center py-16 opacity-60">
+                        <i class="fas fa-search text-4xl text-gray-300 mb-4"></i>
+                        <p class="text-gray-500 text-sm font-medium">No encontramos recetas con "${busqueda}".</p>
+                        <button onclick="limpiarBusqueda()" class="mt-4 text-blue-500 text-xs font-bold">Limpiar búsqueda</button>
+                    </div>
+                ` : ''}
+
+                ${hayMas ? `
+                    <div class="mt-10 text-center pb-8">
+                        <button onclick="cargarMasRecetas()" class="btn-liquid px-8 py-3 rounded-full text-xs font-bold shadow-lg transform hover:scale-105 transition-transform tracking-wide uppercase">
+                            Mostrar más
+                        </button>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function cargarMasRecetas() {
+            recetasMostradas += 6;
             const appContent = document.getElementById('app-content');
-            appContent.innerHTML = `
-                <div class="flex flex-col items-center justify-center h-[60vh] text-center">
-                    <div class="w-20 h-20 border-4 border-orange-200 border-t-orange-600 rounded-full animate-spin mb-4"></div>
-                    <h3 class="text-xl font-bold text-gray-800">El Chef está pensando...</h3>
-                    <p class="text-gray-500">Buscando las mejores combinaciones</p>
+            renderRecipes(appContent);
+        }
+
+        function filtrarCategoria(cat) {
+            const input = document.getElementById('global-search');
+            input.value = cat;
+            input.dispatchEvent(new Event('input'));
+        }
+
+        function limpiarBusqueda() {
+            const input = document.getElementById('global-search');
+            input.value = '';
+            input.dispatchEvent(new Event('input'));
+        }
+
+        function renderRecipeCard(receta) {
+            const coincidencia = calcularCoincidencia(receta);
+            const porcentaje = Math.round(coincidencia.porcentaje);
+            
+            let barColor = 'bg-red-400';
+            let barText = 'text-red-500';
+            if(porcentaje > 40) { barColor = 'bg-yellow-400'; barText = 'text-yellow-600'; }
+            if(porcentaje > 75) { barColor = 'bg-[#32D74B]'; barText = 'text-[#32D74B]'; }
+
+            return `
+                <div class="glass-panel p-3 rounded-super flex gap-4 cursor-pointer hover:bg-white transition-colors group relative overflow-hidden active:scale-[0.99]" onclick="mostrarDetalleReceta(${receta.id})">
+                    <div class="w-28 h-28 rounded-2xl bg-gray-200 overflow-hidden flex-shrink-0 shadow-inner relative">
+                        <img src="${receta.imagen}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="${receta.nombre}" loading="lazy">
+                    </div>
+                    <div class="flex-1 flex flex-col justify-center py-1 pr-1">
+                        <div class="flex justify-between items-start mb-1">
+                            <h4 class="font-bold text-[15px] text-gray-900 leading-tight">${receta.nombre}</h4>
+                            <button class="p-2 -mr-2 -mt-2 active:scale-90 transition-transform" onclick="event.stopPropagation(); toggleFavorito(${receta.id}, this)">
+                                <i class="${misFavoritos.has(receta.id) ? 'fas text-red-500 drop-shadow-sm' : 'far text-gray-400'} fa-heart text-lg"></i>
+                            </button>
+                        </div>
+                        
+                        <p class="text-[11px] text-gray-500 line-clamp-2 mb-3 leading-relaxed font-medium">${receta.descripcion}</p>
+                        
+                        <div class="mt-auto">
+                            <div class="flex justify-between text-[10px] mb-1.5 font-bold uppercase tracking-wide">
+                                <span class="text-gray-400">${coincidencia.encontrados}/${coincidencia.total} Ingredientes</span>
+                                <span class="${barText}">${porcentaje}%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                <div class="${barColor} h-full rounded-full shadow-[0_0_8px_rgba(0,0,0,0.1)] transition-all duration-1000" style="width: ${porcentaje}%"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             `;
+        }
 
-            // Lógica de filtrado
-            const resultados = recetasMexicanas.map(receta => {
-                const coincidencia = calcularCoincidencia(receta);
-                return { ...receta, coincidencia };
-            })
-            .filter(r => r.coincidencia.encontrados > 0) // Solo mostrar si tengo ALGO
-            .sort((a, b) => b.coincidencia.porcentaje - a.coincidencia.porcentaje); // Ordenar por mejor match
+        // 4. AI CHEF VIEW (REAL GEMINI - RENAMED TO CHEFCITO)
+        function renderAI(container) {
+            container.innerHTML = `
+                <div class="h-[80vh] flex flex-col relative">
+                    <div class="glass-panel rounded-3xl flex-1 flex flex-col overflow-hidden shadow-2xl border-white/60 bg-[#F5F5F7]">
+                        <!-- Header Chat -->
+                        <div class="bg-white/90 backdrop-blur-md p-4 border-b border-gray-200 flex items-center gap-3 z-10 shadow-sm">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 flex items-center justify-center text-white shadow-md relative">
+                                <!-- ICONO CORREGIDO PARA QUE APAREZCA EN VERSIÓN FREE -->
+                                <i class="fas fa-wand-magic-sparkles"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-900 text-sm">Chefcito</h3>
+                                <p class="text-[10px] text-blue-500 font-bold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span> Powered by Google</p>
+                            </div>
+                        </div>
 
-            setTimeout(() => {
-                renderRecipes(appContent, resultados);
-                
-                // Actualizar nav
-                document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active', 'text-orange-600'));
-                document.getElementById('nav-recipes').classList.add('active', 'text-orange-600');
-            }, 800);
+                        <!-- Chat Area -->
+                        <div class="flex-1 overflow-y-auto p-4 space-y-4 scroll-smooth" id="chat-messages">
+                            <!-- Mensaje Bienvenida -->
+                            <div class="flex items-end gap-2 max-w-[85%]">
+                                <div class="w-6 h-6 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center text-[10px] text-gray-600"><i class="fas fa-robot"></i></div>
+                                <div class="chat-bubble-ai p-3 text-sm shadow-sm bg-white text-gray-800">
+                                    ¡Hola! Soy Chefcito 👩‍🍳✨. <br>
+                                    Veo que tienes <b>${miInventario.size} ingredientes</b>. ¿Qué te gustaría cocinar hoy? Puedo darte recetas, tips o improvisar algo nuevo.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Input Area -->
+                        <div class="p-3 bg-white border-t border-gray-200 relative">
+                            <form onsubmit="handleRealAIChat(event)" class="relative z-10">
+                                <input type="text" id="ai-input" placeholder="Ej: ¿Qué hago con el pollo y el tomate?" autocomplete="off"
+                                       class="w-full bg-gray-100 text-gray-800 rounded-full py-3 pl-4 pr-12 text-sm focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all shadow-inner">
+                                <button type="submit" class="absolute right-2 top-2 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white hover:bg-blue-600 transition-colors shadow-md active:scale-90">
+                                    <i class="fas fa-arrow-up text-xs"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function handleRealAIChat(e) {
+            e.preventDefault();
+            const input = document.getElementById('ai-input');
+            const message = input.value.trim();
+            if(!message) return;
+
+            const chatContainer = document.getElementById('chat-messages');
+
+            // 1. User Message
+            chatContainer.innerHTML += `
+                <div class="flex justify-end mb-4 animate-[fadeIn_0.3s]">
+                    <div class="chat-bubble-user p-3 text-sm max-w-[80%] shadow-md">
+                        ${message}
+                    </div>
+                </div>
+            `;
+            input.value = '';
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            // 2. Typing Indicator
+            const typingId = 'typing-' + Date.now();
+            chatContainer.innerHTML += `
+                <div class="flex items-end gap-2 mb-4" id="${typingId}">
+                    <div class="w-6 h-6 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center text-[10px] text-gray-600"><i class="fas fa-robot"></i></div>
+                    <div class="bg-gray-100 rounded-2xl p-3 text-gray-400 text-xs italic flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></span>
+                        <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce delay-75"></span>
+                        <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce delay-150"></span>
+                    </div>
+                </div>
+            `;
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            // 3. Call Gemini
+            const geminiResponse = await callGeminiAPI(message);
+
+            // 4. Remove typing and show response
+            document.getElementById(typingId).remove();
+            
+            // Parsear Markdown a HTML
+            const htmlResponse = marked.parse(geminiResponse);
+
+            chatContainer.innerHTML += `
+                <div class="flex items-end gap-2 max-w-[90%] animate-[fadeIn_0.3s]">
+                    <div class="w-6 h-6 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center text-[10px] text-gray-600"><i class="fas fa-robot"></i></div>
+                    <div class="chat-bubble-ai p-3 text-sm shadow-sm bg-white text-gray-800 leading-relaxed overflow-hidden">
+                        ${htmlResponse}
+                    </div>
+                </div>
+            `;
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // ================= HELPERS Y INIT =================
+        function toggleInventario(ingId) {
+            const card = document.getElementById(`ing-card-${ingId}`);
+            if(miInventario.has(ingId)) {
+                miInventario.delete(ingId);
+                if(card) {
+                    card.classList.remove('inventory-item-selected');
+                    card.classList.add('bg-white/60');
+                    card.querySelector('.icon-display').classList.add('grayscale', 'opacity-60');
+                    card.querySelector('.name-display').classList.remove('text-gray-900');
+                    card.querySelector('.name-display').classList.add('text-gray-400');
+                    card.querySelector('.check-badge').classList.remove('opacity-100', 'scale-100');
+                    card.querySelector('.check-badge').classList.add('opacity-0', 'scale-0');
+                }
+            } else {
+                miInventario.add(ingId);
+                if(card) {
+                    card.classList.add('inventory-item-selected');
+                    card.classList.remove('bg-white/60');
+                    card.querySelector('.icon-display').classList.remove('grayscale', 'opacity-60');
+                    card.querySelector('.name-display').classList.add('text-gray-900');
+                    card.querySelector('.name-display').classList.remove('text-gray-400');
+                    card.querySelector('.check-badge').classList.add('opacity-100', 'scale-100');
+                    card.querySelector('.check-badge').classList.remove('opacity-0', 'scale-0');
+                    if(navigator.vibrate) navigator.vibrate(10);
+                }
+            }
+            updateCounters();
+        }
+
+        function updateCounters() {
+            const counter = document.getElementById('inventory-counter');
+            if(counter) {
+                counter.innerText = `${miInventario.size} items`;
+                counter.classList.add('scale-110');
+                setTimeout(() => counter.classList.remove('scale-110'), 200);
+            }
         }
 
         function calcularCoincidencia(receta) {
@@ -726,51 +1111,32 @@
                 }
             });
 
-            return {
-                total,
-                encontrados,
-                faltantes,
-                porcentaje: (encontrados / total) * 100
-            };
+            return { total, encontrados, faltantes, porcentaje: (encontrados / total) * 100 };
         }
 
         function toggleFavorito(id, btnElement) {
+            const icon = btnElement.querySelector('i');
             if(misFavoritos.has(id)) {
                 misFavoritos.delete(id);
-                if(btnElement) {
-                    btnElement.classList.remove('fas', 'text-red-500');
-                    btnElement.classList.add('far');
-                }
+                icon.classList.remove('fas', 'text-red-500', 'drop-shadow-sm');
+                icon.classList.add('far', 'text-gray-400');
             } else {
                 misFavoritos.add(id);
-                if(btnElement) {
-                    btnElement.classList.remove('far');
-                    btnElement.classList.add('fas', 'text-red-500');
-                }
-                
-                // Toast notification
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    timerProgressBar: true
-                });
-                Toast.fire({
-                    icon: 'success',
-                    title: 'Añadido a favoritos'
-                });
+                icon.classList.remove('far', 'text-gray-400');
+                icon.classList.add('fas', 'text-red-500', 'drop-shadow-sm');
+                icon.style.transform = 'scale(1.5)';
+                setTimeout(() => icon.style.transform = 'scale(1)', 200);
             }
         }
 
-        // Helpers
         function getIconForIngredient(id) {
             const map = {
-                'pollo': '🍗', 'res': '🥩', 'cerdo': '🍖', 'huevo': '🥚',
-                'tomate': '🍅', 'cebolla': '🧅', 'ajo': '🧄', 'chile': '🌶️',
-                'cilantro': '🌿', 'aguacate': '🥑', 'limon': '🍋',
-                'tortillas': '🫓', 'frijoles': '🫘', 'arroz': '🍚',
-                'queso': '🧀', 'crema': '🥛'
+                'pollo': '🍗', 'res': '🥩', 'cerdo': '🍖', 'huevo': '🥚', 'jamon': '🥓', 'salchicha': '🌭', 'camaron': '🦐',
+                'tomate': '🍅', 'tomate_verde': '🟢', 'cebolla': '🧅', 'ajo': '🧄', 'chile': '🌶️', 'chile_poblano': '🌶️',
+                'elote': '🌽', 'cilantro': '🌿', 'lechuga': '🥬', 'rabano': '🔴', 'aguacate': '🥑', 'limon': '🍋', 'piña': '🍍', 'granada': '🔴',
+                'tortillas': '🫓', 'maiz_pozolero': '🌽', 'frijoles': '🫘', 'arroz': '🍚', 'pan': '🥖', 'tostadas': '🍘', 'fideos': '🍜',
+                'masa': '🥟', 'aceite': '🌻', 'pasta': '🍝', 'achiote': '🔴',
+                'queso': '🧀', 'crema': '🥛', 'leche': '🥛'
             };
             return map[id] || '🥘';
         }
@@ -780,14 +1146,151 @@
             return ing ? ing.nombre : id;
         }
 
-        // ================= INIT =================
+        function renderFavorites(container) {
+            const favs = recetasMexicanas.filter(r => misFavoritos.has(r.id));
+            if(favs.length === 0) {
+                container.innerHTML = `<div class="text-center py-20 text-gray-400">Sin favoritos aún.</div>`;
+            } else {
+                renderRecipes(container, favs);
+            }
+        }
+        
+        function mostrarDetalleReceta(id) {
+            const receta = recetasMexicanas.find(r => r.id === id);
+            const coincidencia = calcularCoincidencia(receta);
+            const tieneTodo = coincidencia.faltantes.length === 0;
+
+            Swal.fire({
+                html: `
+                    <div class="text-left -mx-5 -mt-5 relative">
+                        <!-- Imagen Header -->
+                        <div class="h-80 relative group">
+                            <img src="${receta.imagen}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80"></div>
+                            
+                            <button onclick="Swal.close()" class="absolute top-4 left-4 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/30 hover:bg-white/40 transition-all z-20">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            
+                            <div class="absolute bottom-0 left-0 w-full p-6 text-white pb-10">
+                                <span class="bg-blue-500/90 backdrop-blur-sm px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest mb-2 inline-block shadow-lg border border-white/20">
+                                    ${receta.categoria}
+                                </span>
+                                <h2 class="text-3xl font-bold leading-tight drop-shadow-lg tracking-tight">${receta.nombre}</h2>
+                            </div>
+                        </div>
+
+                        <!-- Contenido -->
+                        <div class="p-6 bg-white relative rounded-t-[32px] -mt-8 shadow-[0_-10px_40px_rgba(0,0,0,0.2)] z-10">
+                            
+                            <!-- Metadatos -->
+                            <div class="flex justify-around mb-8 pb-6 border-b border-gray-100">
+                                <div class="text-center">
+                                    <div class="w-10 h-10 bg-orange-50 rounded-full flex items-center justify-center text-orange-500 mb-1 mx-auto">
+                                        <i class="far fa-clock"></i>
+                                    </div>
+                                    <p class="text-xs font-bold text-gray-800">${receta.tiempo} min</p>
+                                    <p class="text-[10px] text-gray-400 uppercase">Tiempo</p>
+                                </div>
+                                <div class="text-center">
+                                    <div class="w-10 h-10 bg-green-50 rounded-full flex items-center justify-center text-green-500 mb-1 mx-auto">
+                                        <i class="fas fa-chart-bar"></i>
+                                    </div>
+                                    <p class="text-xs font-bold text-gray-800">${receta.dificultad}</p>
+                                    <p class="text-[10px] text-gray-400 uppercase">Nivel</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Estado Ingredientes -->
+                            <div class="mb-8 p-5 rounded-2xl ${tieneTodo ? 'bg-green-50/80 border border-green-100' : 'bg-orange-50/80 border border-orange-100'}">
+                                <h4 class="font-bold text-sm mb-2 flex items-center gap-2 ${tieneTodo ? 'text-green-700' : 'text-orange-700'}">
+                                    <i class="fas ${tieneTodo ? 'fa-check-circle' : 'fa-shopping-basket'}"></i>
+                                    ${tieneTodo ? '¡Tienes todo listo!' : `Te faltan ${coincidencia.faltantes.length} ingredientes`}
+                                </h4>
+                                ${!tieneTodo ? `
+                                    <div class="flex flex-wrap gap-2 mt-3">
+                                        ${coincidencia.faltantes.map(i => `<span class="px-2 py-1 bg-white rounded-lg text-[10px] font-bold text-gray-600 border border-black/5 shadow-sm">${obtenerNombreIngrediente(i)}</span>`).join('')}
+                                    </div>
+                                ` : ''}
+                            </div>
+
+                            <!-- Ingredientes -->
+                            <div class="mb-8">
+                                <h3 class="font-bold text-xl text-gray-900 mb-4 tracking-tight">Ingredientes</h3>
+                                <ul class="space-y-3">
+                                    ${receta.ingredientesBase.map(ing => {
+                                        const tengo = miInventario.has(ing);
+                                        return `
+                                        <li class="flex items-center justify-between p-3 rounded-xl transition-colors ${tengo ? 'bg-gray-50' : 'bg-white border border-gray-100'}">
+                                            <span class="flex items-center gap-3 font-medium text-sm ${tengo ? 'text-gray-900' : 'text-gray-400'}">
+                                                <div class="w-2.5 h-2.5 rounded-full ${tengo ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]' : 'bg-gray-200'}"></div>
+                                                ${obtenerNombreIngrediente(ing)}
+                                            </span>
+                                            ${tengo ? '<i class="fas fa-check text-green-500 text-sm"></i>' : ''}
+                                        </li>`;
+                                    }).join('')}
+                                </ul>
+                            </div>
+
+                            <!-- Preparación -->
+                            <div class="mb-8">
+                                <h3 class="font-bold text-xl text-gray-900 mb-5 tracking-tight">Preparación</h3>
+                                <div class="space-y-8 relative pl-4">
+                                    <div class="absolute left-[11px] top-2 bottom-6 w-0.5 bg-gray-100"></div>
+                                    ${receta.instrucciones.map((paso, index) => `
+                                        <div class="relative flex gap-4">
+                                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-white border-2 border-orange-500 text-orange-600 font-bold text-[10px] flex items-center justify-center z-10 shadow-sm mt-0.5">
+                                                ${index + 1}
+                                            </div>
+                                            <p class="text-sm text-gray-600 leading-relaxed font-medium pt-0.5">${paso}</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            ${receta.tips && receta.tips.length > 0 ? `
+                                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-5 rounded-2xl border border-blue-100 mb-8 relative overflow-hidden">
+                                    <i class="fas fa-lightbulb absolute -right-4 -bottom-4 text-6xl text-blue-100 opacity-50 rotate-12"></i>
+                                    <h3 class="font-bold text-blue-800 text-sm mb-3 flex items-center gap-2 relative z-10">
+                                        <i class="fas fa-star text-yellow-400"></i> Secretos de Chefcito
+                                    </h3>
+                                    <ul class="space-y-2 relative z-10">
+                                        ${receta.tips.map(tip => `<li class="text-xs text-blue-800/80 leading-relaxed pl-3 border-l-2 border-blue-300">${tip}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
+
+                            <button class="w-full btn-liquid py-4 rounded-xl font-bold shadow-xl text-sm uppercase tracking-wide" onclick="Swal.close()">
+                                Cerrar Receta
+                            </button>
+                        </div>
+                    </div>
+                `,
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'rounded-[32px] overflow-hidden p-0 bg-transparent',
+                    container: 'p-0 backdrop-blur-sm'
+                },
+                width: '100%',
+                padding: 0,
+                background: 'transparent'
+            });
+        }
+
+        document.getElementById('global-search').addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            const activeNav = document.querySelector('.bottom-nav-item.active');
+            if(val.length > 0 && activeNav.id !== 'nav-recipes') {
+                router('recipes');
+                setTimeout(() => { document.getElementById('global-search').value = val; document.getElementById('global-search').focus(); }, 50);
+            } else if (activeNav.id === 'nav-recipes') {
+                renderRecipes(document.getElementById('app-content'));
+            }
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
+            miInventario.add('tortillas'); miInventario.add('queso'); miInventario.add('huevo');
             router('home');
-            
-            // Pre-llenar inventario con algo para demo
-            miInventario.add('tortillas');
-            miInventario.add('queso');
-            miInventario.add('tomate');
         });
 
     </script>
